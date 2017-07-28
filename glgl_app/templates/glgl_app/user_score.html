@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>请为自己的学习效果打分</title>
+</head>
+
+<body>
+    <div>
+        <div id="video-id" style="display: none;">{{ user_id }}</div>
+        <label>该视频对应的知识点是：{{ knowledge }}</label>
+        <label>教学大纲对该知识点的要求是：{{ demand }}</label>
+        <form action="spreadingactivate/" method="POST">
+            {% csrf_token %}
+            <input type="radio" name="score" checked="checked" value="{{ user_id }}:0.0" />完全没学懂<br />
+            <input type="radio" name="score" value="{{ user_id }}:0.2" />学会了一点<br />
+            <input type="radio" name="score" value="{{ user_id }}:0.6"/>基本学会了<br />
+            <input type="radio" name="score" value="{{ user_id }}:1.0" />完全学会了
+            <button id="finish">提交</button>
+        </form>
+	</div>
+</body>
+</html>

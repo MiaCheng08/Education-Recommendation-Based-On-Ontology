@@ -1,0 +1,148 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}我的知识体系{% endblock %}
+
+{% block extracss %}
+    <!-- We use google fonts for many of the examples, but they are not necessary -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto|Raleway:600,400,200' rel='stylesheet' type='text/css'>
+
+    <!-- Test container style sheets -->
+    <link rel="stylesheet" href="/static/weight/examples.css">
+
+    <!-- Vizuly specific style sheets -->
+    <link rel="stylesheet" href="/static/weight/lib/styles/vizuly.css">
+    <link rel="stylesheet" href="/static/weight/lib/styles/vizuly_weightedtree.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/static/weight/lib/styles/cssmenu.css">
+
+    <style>
+    div.tip {
+        position: absolute;
+        text-align: left;
+        pointer-events: none;
+        width: 400px;
+        padding: 10px;
+        border: 1px solid #D5D5D5;
+        font-family: arial,helvetica,sans-serif;
+        font-size: 1.1em;
+        color: #333;
+        padding: 10px;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.9);
+        color: #000;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        border:1px solid rgba(200,200,200,0.85);
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+<div style="display: none;">
+    <form id="video_form" action="/videoset/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" id="videos" name="videos"/>
+        <input type="hidden" id="knowledge_name" name="knowledge"/>
+    </form>
+</div>
+
+<div class="row bar_content">
+    {% if user.is_authenticated and not user.is_staff %}
+    <div class="col-sm-12 col-md-12 box-left" id="feed" style="display:none;">
+        <div id="feedback_body" class="panel-body">
+            <div id="question" style="display: block;">
+                <label>学习方案对你有帮助吗？</label>
+                <button class="btn btn-info bullet-send-btn" onclick="feedyes(this)">有</button>
+                <button class="btn btn-info bullet-send-btn" onclick="feedno(this)">没有</button>
+            </div>
+
+            <div id="thanks" class="alert alert-danger alert-dismissible" role="alert" style="display: none;">
+                谢谢反馈!<!--strong是加粗-->
+            </div>
+        </div>
+    </div><!--反馈-->
+    <div class="col-sm-12 col-md-12">
+        <div style="margin-left:0px;  width:90%; margin:0px auto; margin-top:0px auto; font-family:Raleway; font-size:14px;">
+            以下展示的是你的学习情况，线越粗代表你对该知识点掌握的越好，你需要更加关注那些线很细或者灰掉的知识点哟
+        </div>
+        <div id="viz_container" class="z-depth-3"></div>
+    </div>
+    {% else %}
+    <div class="m-row" style="text-align: center">
+    <a href="/login">登录</a>后可获得个性化的学习方案
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+
+<!-- D3.js ... of course!
+<script src="/static/weight/weighted_tree_revise.js"></script>
+
+
+-->
+<script src="/static/weight/lib/d3.min.js"></script>
+<script src="/static/js/weighted_tree_user.js"></script>
+
+<script src="/static/js/ajax-send.js"></script>
+
+<script>
+    function feedyes(){
+    $.post('/graphfeed/',
+        {
+            "feed":"True"
+        },
+        function(data){
+            document.getElementById("question").style.display='none';
+            document.getElementById("thanks").style.display='block';
+        }
+    );
+    }
+
+    function feedno(){
+    $.post('/graphfeed/',
+        {
+            "feed":"False"
+        },
+        function(data){
+            document.getElementById("question").style.display='none';
+            document.getElementById("thanks").style.display='block';
+        }
+    );
+    }
+</script>
+
+<script>
+    //Once the document is ready we set javascript and page settings
+    var screenWidth;
+    var screenHeight;
+
+    $(document).ready(function () {
+        var rect;
+        if (self==top) {
+            rect = document.body.getBoundingClientRect();
+        }
+        else {
+            rect = document.body.getBoundingClientRect();
+        }
+
+        //Set display size based on window size.
+        screenWidth = (rect.width < 960) ? Math.round(rect.width*.95) : Math.round((rect.width - 210) *.95);
+
+        screenHeight=750;
+
+        // Set the size of our container element.
+        viz_container = d3.selectAll("#viz_container")
+                .style("width", screenWidth + "px")
+                .style("height", screenHeight + "px");
+        loadData();//调用weightedtree_test.js里的
+        
+        document.getElementById("feed").style.display='block';
+    });
+
+</script>
+
+{% endblock %}

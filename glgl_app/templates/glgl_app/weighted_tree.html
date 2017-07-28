@@ -1,0 +1,96 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}知识图谱{% endblock %}
+
+{% block extracss %}
+    <!-- We use google fonts for many of the examples, but they are not necessary -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto|Raleway:600,400,200' rel='stylesheet' type='text/css'>
+
+    <!-- Test container style sheets -->
+    <link rel="stylesheet" href="/static/weight/examples.css">
+
+    <!-- Vizuly specific style sheets -->
+    <link rel="stylesheet" href="/static/weight/lib/styles/vizuly.css">
+    <link rel="stylesheet" href="/static/weight/lib/styles/vizuly_weightedtree.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/static/weight/lib/styles/cssmenu.css">
+
+    <style>
+    div.tip {
+        position: absolute;
+        text-align: left;
+        pointer-events: none;
+        width: 400px;
+        padding: 10px;
+        border: 1px solid #D5D5D5;
+        font-family: arial,helvetica,sans-serif;
+        font-size: 1.1em;
+        color: #333;
+        padding: 10px;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.9);
+        color: #000;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        border:1px solid rgba(200,200,200,0.85);
+    }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+<div style="margin-left:0px;  width:90%; margin:0px auto; margin-top:0px auto; font-family:Raleway; font-size:14px;">
+    以下展示的是高等数学上册的知识图谱，线越粗代表该知识点在整个知识领域越重要，你需要更加认真地去学习
+</div>
+<div style="display: none;">
+    <form id="video_form" action="/videoset/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" id="videos" name="videos"/>
+        <input type="hidden" id="knowledge_name" name="knowledge"/>
+    </form>
+</div>
+<div id="viz_container" class="z-depth-3">
+</div>
+
+{% endblock %}
+
+{% block extrascripts %}
+
+<!-- D3.js ... of course!
+<script src="/static/weight/weighted_tree_revise.js"></script>
+
+-->
+<script src="/static/weight/lib/d3.min.js"></script>
+<script src="/static/js/weighted_tree.js"></script>
+
+<script>
+    //Once the document is ready we set javascript and page settings
+    var screenWidth;
+    var screenHeight;
+
+    $(document).ready(function () {
+        var rect;
+        if (self==top) {
+            rect = document.body.getBoundingClientRect();
+        }
+        else {
+            rect = document.body.getBoundingClientRect();
+        }
+
+        //Set display size based on window size.
+        screenWidth = (rect.width < 960) ? Math.round(rect.width*.95) : Math.round((rect.width - 210) *.95);
+
+        screenHeight=750;
+
+        // Set the size of our container element.
+        viz_container = d3.selectAll("#viz_container")
+                .style("width", screenWidth + "px")
+                .style("height", screenHeight + "px");
+
+        loadData();//调用weightedtree_test.js里的
+    });
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "glgl_app/base.html" %}
+
+{% block extracss %}
+	<link href="/static/css/video.css" rel="stylesheet">
+	<link href="/static/css/video-js.css" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block content %}
+	<div class="dd-video">
+		<div class = "col-md-8">
+			<div class="info">
+				<div class="video-title"><h2>{{ video.title }}</h2></div>
+				<div style="clear:both;"></div>
+				<div class="tminfo"><a href="/">主页</a> > <a href="/category/{{video.category}}">{{ video.categoryName }}</a>
+					&nbsp;&nbsp;&nbsp;
+					<i id="dianji" title="播放">{{ video.play }}</i>
+					&nbsp;&nbsp;&nbsp;
+					<span>
+						上传时间：{{ video.time|date:"Y年m月d日" }}, 视频类型：{{ video_type }}
+					</span>
+				</div>
+				<div style="clear:both;"></div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<a href="#">
+						<div class="u-face"><img class="small-headimage" src='/media/{{video.uploader.userextraprofile.headimage}}'>
+						</div>
+					</a>
+					<div class="r-info">
+						<div class="usname"><a href="/homepage/{{ video.uploader.id }}"
+						class="name">{{ video.uploader.username }}</a></div>
+						<div class="sign">{{ video.uploader.userextraprofile.description }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12" >评论区</div>
+		{% if all_comment %}
+			{% for comment in all_comment %}
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<a href="#">
+								<div class="u-face"><img class="small-headimage" src='/media/{{comment.user.userextraprofile.headimage}}'>
+								</div>
+							</a>
+							<div class="r-info">
+								<div class="usname"><a href="/homepage/{{ video.uploader.id }}"
+								class="name">{{ comment.user.nickName }}</a></div>
+								<div class="sign">{{ comment.content }}</div>
+								<div class="sign">{{ comment.cdate }}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="col-md-12">还没有评论哦</div>
+		{% endif %}
+		<div class="m-row" style="text-align: center">
+			<a href = "{{ video.get_absolute_url }}" class = "btn btn-default btn-lg" style="margin-top: 10px">返回</a>
+		</div>
+		
+	</div>
+{% endblock %}
+{% block extrascripts %}
+<script src="/static/js/video.js"></script>
+<script src="/static/js/ajax-send.js"></script>
+
+
+<script>//这个在这没用
+(function(){
+	
+	var send_btn = $('#send-comment');
+	var comment_input = $('#input-comment');
+	var video_id = $('#video-id');
+
+	send_btn.click(function(){
+		$.post('/send-comment/',{
+			'video' : video_id.html(),
+			'content' : comment_input.val()
+		},function(){});
+		comment_input.val('')
+		layer.msg('评论成功');
+	}) 
+})();
+</script>
+{% endblock %}

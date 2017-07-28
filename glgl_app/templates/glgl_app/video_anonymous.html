@@ -1,0 +1,161 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block extracss %}
+	<link href="/static/css/video.css" rel="stylesheet">
+	<link href="/static/css/video-js.css" rel="stylesheet">
+	<link rel="stylesheet" href="/static/css/kn_other_map.min.css">
+	<style>
+	.relevant-videos-scroll {
+        height:458px;
+		overflow-y: scroll;
+	}
+	.kl_str{
+	    height:500px;
+	    background-color:#f8f8f8;
+	    height:100%
+	}
+	.kl_str svg{
+	    left:0;
+	    top:0
+	}
+	</style><!--这个是设置滚动条元素-->
+	<link rel="stylesheet" type= "text/css" href="/static/css/index.css" >
+    <link rel="stylesheet" href="/static/css/style.css">
+{% endblock %}
+
+{% block content %}
+	<div>
+		<div class="row bar_content">
+            <div class="col-sm-12 col-md-8 dd-video">
+                <div class="info">
+                    <div class="video-title"><h2>{{ video.title }}</h2></div>
+                    <div style="clear:both;"></div>
+                    <div class="tminfo">
+                        <a href="/">知识图谱</a>
+                        <i>{{ video.tag }}</i>
+                        &nbsp;&nbsp;&nbsp;
+                                 <!--这个东西在 html 里是空格占位符，普通的空格在 html 里如果连续的多个可能被
+                                 认为只有一个，而这个东西你写几个就能占几个空格位-->
+                        <i id="dianji" title="播放">{{ video.play }}</i>
+                                 <!--i标签显示斜体文本效果-->
+                        &nbsp;&nbsp;&nbsp;
+                        <span>
+                            上传时间：{{ video.time|date:"Y年m月d日" }}, 视频类型：{{ video_type }}
+                        </span>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div><!--视频信息-->
+                <div class="player">
+                    <div id="video-id" style="display: none;">{{ video.pk }}</div><!--注意style="display: none;"的妙用，目的是使得video的id可以被JS获得，传给服务器-->
+                    <video id="video" class="video-js vjs-default-skin vjs-big-play-centered" controls="controls" preload="auto" width="640" height="400" data-setup='{"playbackRates": [1, 1.5, 2]}' poster='/media/{{video.cover}}'>
+                    </video>
+                </div><!--视频播放区域-->
+            </div><!--视频区域-->
+            <div class="col-sm-12 col-md-4 " id="relevant-video"><!--相关视频推荐区域-->
+                <div class="panel panel-danger">
+                    <div class="panel-heading">相关视频推荐</div>
+                    <div class="panel-body relevant-videos-scroll">
+                      {% for video in videos %}
+                      <div class="dd-grid">
+                          <figure class="effect-sadie">
+                             <img src="/media/{{video.cover}}" alt="img02" class="img-responsive center-block"/>
+                             <figcaption>
+                                 <h2>{{ video.title }}</h2>
+                                 <p>讲师: {{ video.teacher }} <br>播放量: {{ video.play }}<br>视频质量: {{ video.quality }} <br>上传者: {{ video.uploader.username }}</p>
+                                 <a href="{{ video.get_absolute_url }}">View more</a>
+                             </figcaption>
+                             <!--figcaption用在figure中规定figure元素的标题-->
+                         </figure>
+                     </div>
+                     {% endfor %}
+                    </div>
+                </div>
+            </div><!--相关视频推荐-->
+            <div class="col-sm-8 col-md-8 box-admin">
+                <div class="glyphicon glyphicon-play" aria-hidden="true"></div>
+                <div>播放量：<span id = "playnum">{{video.play}}</span></div>
+            </div><!--播放量-->
+            <div id='checkmsg'/>
+            <div class="col-sm-12 col-md-8" id="part-path">
+                <div class="panel panel-success">
+                    <div class="panel-heading">为你指定的学习路径</div>
+                    <div id="mapRow" class="panel-body kl_str">
+                        <a href="/login">登录</a>后可获得个性化的学习方案
+                    </div>
+                </div>
+            </div><!--学习路径-->
+            <div class="col-sm-12 col-md-4 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">视频信息</div>
+                    <div class="panel-body">
+                        <a href="#">
+                         <div class="u-face">
+                             <img class="small-headimage" src='/media/{{video.uploader.userextraprofile.headimage}}'>
+                         </div>
+                        </a>
+                        <div class="r-info">
+                            <div class="usname">
+                                <label>上传者：</label>
+                                <a href="/homepage/{{ video.uploader.id }}" class="name">
+                                 {{ video.uploader.username }}
+                                </a>
+                            </div>
+                            <div class="sign">
+                                <label>讲师：{{ video.teacher }}</label><br/>
+                                <label>视频描述：{{ video.description }}</label><br/>
+                                <label>视频难度：{{ video.difficulty }}</label><br/>
+                                <label>知识点标签：{{ video.tag }}</label><br/>
+                                <label>知识点描述：{{ description }}</label><br/>
+                                <label>教学大纲对该知识点的要求是：{{ demand }}</label><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--视频信息-->
+            <div class="col-sm-12 col-md-8 box-left">
+                <div class = 'panel panel-success'><!--评论区开头-->
+                    <div class="panel-heading">评论区</div>
+                    <div class="panel-body"><!--与作者显示方式一样 用同样的css样式类-->
+                        <a href="/login">登录</a>后可评论
+                        <div class="right">
+                            <br/>
+                        </div>
+                        {% if latest_comment %}
+                            {% for comment in latest_comment %}
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="r-info">
+                                            <a href="#"><!--点击后到顶端-->
+                                                <div class="u-face"><img class="small-headimage" src='/media/{{comment.user.userextraprofile.headimage}}'> </div>
+                                            </a>
+                                            <div class="usname">
+                                                <a href="/homepage/{{ comment.user.id }}" class="name">
+                                                 {{ comment.user.userextraprofile.nickName }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="sign">{{ comment.content }}</div>
+                                        <div class="sign">{{ comment.cdate }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <a href = 'morecomments/' >view more</a>>
+                        {% else %}
+                            <div class="">还没有评论哦</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div><!--评论区-->
+		</div>
+	</div>
+{% endblock %}
+
+{% block extrascripts %}
+	<script src="/static/js/video.js"></script>
+    <script>
+    var video =document.getElementById("video");
+    video.addEventListener("play",function(){video.pause();layer.msg("请登录！")},true);
+	</script>
+{% endblock %}

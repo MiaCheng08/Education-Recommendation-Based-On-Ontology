@@ -1,0 +1,436 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block extracss %}
+	<link href="/static/css/video.css" rel="stylesheet">
+	<link href="/static/css/video-js.css" rel="stylesheet">
+	<link rel="stylesheet" href="/static/css/kn_other_map.min.css">
+	<style>
+	.relevant-videos-scroll {
+        height:458px;
+		overflow-y: scroll
+	}
+	.path-scroll{
+        height: 400px;
+        overflow-y: auto
+	}
+	.kl_str{
+	    height:500px;
+	    background-color:#f8f8f8;
+	    height:100%
+	}
+	.kl_str svg{
+	    left:0;
+	    top:0
+	}
+	</style><!--这个是设置滚动条元素-->
+    <style>
+    div.tip {
+        position: absolute;
+        text-align: left;
+        pointer-events: none;
+        width: 400px;
+        padding: 10px;
+        border: 1px solid #D5D5D5;
+        font-family: arial,helvetica,sans-serif;
+        font-size: 1.1em;
+        color: #333;
+        padding: 10px;
+        border-radius: 3px;
+        background: rgba(255,255,255,0.9);
+        color: #000;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        border:1px solid rgba(200,200,200,0.85);
+    }
+    </style>
+	<link rel="stylesheet" type= "text/css" href="/static/css/index.css" >
+    <link rel="stylesheet" href="/static/css/style.css">
+{% endblock %}
+
+{% block content %}
+	<div>
+		<div class="row bar_content">
+            <div class="col-sm-12 col-md-8 dd-video">
+                <div class="info">
+                    <div class="video-title"><h2>{{ video.title }}</h2></div>
+                    <div style="clear:both;"></div>
+                    <div class="tminfo">
+                        <a href="/">查看知识图谱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                     <!--这个东西在 html 里是空格占位符，普通的空格在 html 里如果连续的多个可能被
+                     认为只有一个，而这个东西你写几个就能占几个空格位-->
+                        &nbsp;&nbsp;&nbsp;
+                        <span>
+                            上传时间：{{ video.time|date:"Y年m月d日" }}, 视频类型：{{ video_type }}
+                        </span>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div><!--视频信息-->
+                <div class="player">
+                    <div id="video-id" style="display: none;">{{ video.pk }}</div><!--注意style="display: none;"的妙用，目的是使得video的id可以被JS获得，传给服务器-->
+                    <video id="video" class="video-js vjs-default-skin vjs-big-play-centered" controls="controls" preload="auto" width="640" height="400" data-setup='{"playbackRates": [1, 1.5, 2]}' poster='/media/{{video.cover}}' >
+                        <!--
+                        属性controls 值为controls ：如果出现该属性，则向用户显示控件，比如播放按钮。
+                        属性poster 值为URL：规定视频下载时显示的图像，或者在用户点击播放按钮前显示的图像。
+                        属性preload 值为preload：如果出现该属性，则视频在页面加载时进行加载，并预备播放。
+                        属性src没有用到，用了子标签source
+                        -->
+                         {% if video_type == 'mp4' %}
+                            <source src="{{ video.video.url }}" type='video/mp4'/><!--video中的子标签-->
+                        {% else %}
+                            <source src="{{ video.video.url }}" type='video/flv'/>
+                        {% endif %}
+                        <p class="vjs-no-js"><!--video中加的文字，当视频无法正常播放时显示-->
+                            To view this video please enable JavaScript, and consider upgrading to a
+                            web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports
+                            HTML5 video</a>
+                        </p>
+                    </video>
+                </div><!--视频播放区域-->
+            </div><!--视频区域-->
+            <div class="col-sm-12 col-md-4 " id="relevant-video"><!--相关视频推荐区域-->
+                <div class="panel panel-danger">
+                    <div class="panel-heading">相关视频推荐</div>
+                    <div class="panel-body relevant-videos-scroll">
+                      {% for video in videos %}
+                      <div class="dd-grid">
+                          <figure class="effect-sadie">
+                             <img src="/media/{{video.cover}}" alt="img02" class="img-responsive center-block"/>
+                             <figcaption>
+                                 <h2>{{ video.title }}</h2>
+                                 <p>视频难度: {{ video.difficulty }}<br>讲师: {{ video.teacher }}<br>视频质量: {{ video.quality }}<br>播放量: {{ video.play }}</p>
+                                 <a href="{{ video.get_absolute_url }}">View more</a>
+                             </figcaption>
+                             <!--figcaption用在figure中规定figure元素的标题-->
+                         </figure>
+                     </div>
+                     {% endfor %}
+                    </div>
+                </div>
+            </div><!--相关视频推荐-->
+            <div class="col-sm-2 col-md-2 box-admin">
+                <div class="glyphicon glyphicon-play" aria-hidden="true"></div>
+                <div>播放量：<span id = "playnum">{{video.play}}</span></div>
+            </div><!--播放量-->
+            <div class="col-sm-2 col-md-2 box-admin">
+                <div class="glyphicon glyphicon-heart" aria-hidden="true" style = "cursor: pointer" onclick="like_this(this)"></div>
+                <div>点赞数：<span id = "like_num">{{video.like}}</span></div>
+            </div><!--点赞-->
+            <div class="col-sm-2 col-md-2 box-admin">
+                <div class="glyphicon glyphicon-heart" aria-hidden="true" style = "cursor: pointer" onclick="favorite_this(this)"></div>
+                <div>收藏数：<span id = "favorite_num">{{video.favorite}}</span></div>
+            </div><!--收藏-->
+            <div id='checkmsg'/>
+            <div class="col-sm-12 col-md-8" id="part-path">
+                <form id="video_form" action="/videoset/" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="videos" name="videos"/>
+                    <input type="hidden" id="knowledge_name" name="knowledge"/>
+                </form>
+                <div class="panel panel-success">
+                    <div class="panel-heading">为你指定的学习路径</div>
+                    <div id="mapRow" class="panel-body path-scroll">
+                        <button id="reload" class="btn btn-info bullet-send-btn" onclick="refresh(this)">刷新</button>
+                    </div>
+                </div>
+            </div><!--学习路径-->
+            <div class="col-sm-12 col-md-4 box-left " id="score_show" style="display: none;">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">请为你本次学习效果打分</div>
+                    <div class="panel-body">
+                        <input type="radio" name="score" checked="checked" value= 0.0 />完全没学懂<br />
+                        <input type="radio" name="score" value= 0.6 />基本学会了<br />
+                        <input type="radio" name="score" value= 1.0 />完全学会了
+                        <button id="finish" onclick="scorefinish(this)">提交</button>
+                    </div>
+                </div>
+            </div><!--视频打分--><!--视频播放完毕出现，提供给用户打分-->
+            <div class="col-sm-12 col-md-4 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">视频信息</div>
+                    <div class="panel-body">
+                        <a href="#">
+                         <div class="u-face">
+                             <img class="small-headimage" src='/media/{{video.uploader.userextraprofile.headimage}}'>
+                         </div>
+                        </a>
+                        <div class="r-info">
+                            <div class="usname">
+                                <label>上传者：</label>
+                                <a href="/homepage/{{ video.uploader.id }}" class="name">
+                                 {{ video.uploader.username }}
+                                </a>
+                            </div>
+                            <div class="sign">
+                                <label>讲师：{{ video.teacher }}</label><br />
+                                <label>视频描述：{{ video.description }}</label><br />
+                                <label>视频难度：{{ video.difficulty }}</label><br/>
+                                <label>知识点标签：{{ video.tag }}</label><br />
+                                <label>知识点描述：{{ description }}</label><br />
+                                <label>教学大纲对该知识点的要求是：{{ demand }}</label><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--视频信息-->
+            <div class="col-sm-12 col-md-4 box-left" id="part_feed" style="display: block;">
+                <div id="feedback_body" class="panel-body">
+                    <div id="question" style="display: block;">
+                        <label>学习方案对你有帮助吗？</label>
+                        <button class="btn btn-info bullet-send-btn" onclick="feedyes(this)">有</button>
+                        <button class="btn btn-info bullet-send-btn" onclick="feedno(this)">没有</button>
+                    </div>
+                    <div id="thanks" class="alert alert-danger alert-dismissible" role="alert" style="display: none;">
+                        谢谢反馈!<!--strong是加粗-->
+                    </div>
+                </div>
+            </div><!--反馈-->
+            <div class="col-sm-12 col-md-8 box-left">
+                <div class = 'panel panel-success'><!--评论区开头-->
+                    <div class="panel-heading">评论区</div>
+                    <div class="panel-body"><!--与作者显示方式一样 用同样的css样式类-->
+                        <textarea id="input-comment" class="form-control" maxlength="400" placeholder="留下你的脚印吧~不要超过400字哦" aria-describedby="basic-addon1">
+                        </textarea>
+                        <div class="right">
+                            <button id="send-comment" class="btn btn-info bullet-send-btn" onclick="send_comment(this)">发送</button>
+                        </div><!--评论提交到哪里了？：由下边的JS完成--><!--评论提交区-->
+                        <div class="right">
+                            <br/>
+                        </div>
+                        {% if latest_comment %}
+                            {% for comment in latest_comment %}
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="r-info">
+                                            <a href="#"><!--点击后到顶端-->
+                                                <div class="u-face"><img class="small-headimage" src='/media/{{comment.user.userextraprofile.headimage}}'> </div>
+                                            </a>
+                                            <div class="usname">
+                                                <a href="/homepage/{{ comment.user.id }}" class="name">
+                                                 {{ comment.user.userextraprofile.nickName }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="sign">{{ comment.content }}</div>
+                                        <div class="sign">{{ comment.cdate }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <a href = 'morecomments/' >view more</a>>
+                        {% else %}
+                            <div class="">还没有评论哦</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div><!--评论区-->
+		</div>
+	</div>
+{% endblock %}
+
+{% block extrascripts %}<!--添加额外的浏览器脚本-->
+<!--<script type="text/javascript" src="http://vjs.zencdn.net/5.10.7/video.js"></script>-->
+	<script src="/static/js/video.js"></script>
+    <script src="/static/js/ajax-send.js"></script>
+	<!--为了部分学习方案的展示-->
+	<script type="text/javascript" src="/static/js/path_user.js"></script>
+	<script type="text/javascript" src="/static/weight/lib/d3.min.js" charset="utf-8"></script>
+
+    <script>
+        function like_this(){
+            $.post('likethis/',function(data){
+                layer.msg('您已点赞')//请求likethis/成功后才会执行这个回调函数
+                document.getElementById("like_num").innerHTML = data.like;
+            })
+
+            //x=document.getElementById("likenum")：利用id查找元素，元素指的是HTML中的标签
+            //x.innerHTML="Hello JavaScript"：改变内容
+        }
+
+        function favorite_this(){
+            $.post('favoritethis/',function(data){
+                layer.msg('您已收藏')
+                document.getElementById("favorite_num").innerHTML = data.favorite;//在服务器那里是这样的：return JsonResponse(data = {'like': video.like}) 我在最后一个script中照葫芦画瓢没用啊！
+            })
+        }
+
+        function send_comment(){
+			$.post('/send-comment/',
+				{
+					'video_id' : video_id.html(),
+					'content' : comment_input.val()
+				},
+				function(){
+					comment_input.val('');//将填写的评论清空
+					layer.msg('评论成功!');//web弹框提示
+				}//仅仅是这样写 还是感觉不完整 哎
+			);
+		}
+
+		function update(){
+			$.get('showpartpath/',
+				function(data){
+					if (data.access && data.get){
+						var nodes = data.nodes,lines = data.lines
+						//loadMap(options, nodes, lines);
+						loadMap(nodes);
+					}else if(data.access){
+						var html = '<p>个性化学习方案获取失败</p>';
+						$('#part-path').append(html);
+					}else{
+						var html = '<a href="/login">登录后可获得专门为您制定的学习方案</a>';
+						$('#anonymous').append(html);
+					}
+				}
+			);
+		}
+
+		function show(){
+			var score =document.getElementById("score_show");
+			score.style.display='block';
+		}
+
+		function scorefinish(){
+			value = parseFloat($('input[name="score"]:checked').val());
+            $.post('updateuserontology/',
+                {
+                    "score":value
+                },
+                function(data){
+                    document.getElementById("score_show").style.display='none';
+                    alert(data.msg);
+                    //layer.msg(data.msg);
+                }
+            );
+		}
+
+        function scoreunfinish(ratio){
+            $.post('updateuserontologysilent/',
+                {
+                    "ratio":ratio
+                },
+                function(data){
+                    layer.msg("本次学习没有坚持下来，下次加油哟！");
+                }
+            );
+		}
+		function refresh(){
+            $('#map').remove();
+            update();
+            document.getElementById("part_feed").style.display='block';
+            document.getElementById("question").style.display='block';
+            document.getElementById("thanks").style.display='none';
+		}
+
+		function feedyes(){
+            $.post('partfeed/',
+                {
+                    "feed":"True"
+                },
+                function(data){
+                    document.getElementById("question").style.display='none';
+                    document.getElementById("thanks").style.display='block';
+                }
+            );
+		}
+
+		function feedno(){
+            $.post('partfeed/',
+                {
+                    "feed":"False"
+                },
+                function(data){
+                    document.getElementById("question").style.display='none';
+                    document.getElementById("thanks").style.display='block';
+                }
+            );
+		}
+    </script>
+
+    <script>
+	var comment_input = $('#input-comment');
+	var video_id = $('#video-id');
+	var score =document.getElementById("score_show");
+    var video =document.getElementById("video");
+    video.addEventListener("ended",function(){document.getElementById("part_feed").style.display='none'; score.style.display='block';},true);
+
+    window.onbeforeunload = function(event) {
+        if(video.readyState > 0) {
+            var ratio = video.currentTime / video.duration;
+            if (ratio < 1 && ratio > 0.4){
+                scoreunfinish(ratio);
+                 event.returnValue = "未对学习"
+            }
+            else if (ratio >= 1 && document.getElementById("score_show").style.display == 'block'){
+                event.returnValue = "未对学习效果打分，确定要离开吗？";// 在 Firefox 浏览器中，只显示默认提醒信息（不显示自定义信息）  不支持chrome
+            }
+        }
+    };
+
+	var dw=718,dh=2000,options;
+	options = {
+		width: dw,
+		height: dh
+	};
+//需要添加用户验证
+	$(document).ready(
+		update()//分号不能多也不能少
+	);
+	</script>
+{% endblock %}
+<!--id用户那么大我对它有点好奇了，标签的id和class区别是：
+id是HTML元素的Identity（name是元素实例的identity），主要是在客户端脚本里用，用途：
+1.脚本中获得对象：IE支持在脚本中直接以id（而不是name）引用该id标识的对象。
+用DOM的话，用document.getElementById("×××")，$('#×××')是其简写。
+JS就是利用HTML的DOM模式做事情的
+
+val()常用来操作标准的表单组件对象，如button,text,hidden
+
+    <script>
+        (function()//这是一个没有参数的匿名函数，而且定义完之后就被调用了，因为它外面已经加上的圆括号，而上面的三个函数是在html的onclick属性中被调用的
+            {//该匿名函数的函数体
+                //一般来说$是为了简短输入。在JQ和Prototype里$('#id') 等于 document.getElementById('id')
+                var send_btn = $('#send-comment');//id=send-comment 出现在提交评论的button
+                //var是JavaScript的三种方式定义对象之一，注意JS是基于对象的语言，并不是面向对象
+                var comment_input = $('#input-comment');//id=input-comment 出现在填写评论的框框div中
+                var video_id = $('#video-id');//id=video-id 出现在video的播放div部分
+                send_btn.click//将send_btn看成它所在的button，此时点上click，相当于对button绑定一个点击事件，具体描述如下
+                //click的用法是jQuery中的做法，除外还有两种，其中就是上面HTML的事件属性onclick，
+                //具体讨论看https://segmentfault.com/q/1010000000332625
+                (
+                    function()//又一匿名函数
+                    {
+                        $.post//函数体中调用了post
+                        (
+                            '/send-comment/',   //post函数的变量url，注意'/send-comment/'前面有‘/’
+                            {
+                                'video' : video_id.html(),//请求被评论的视频id
+                                'content' : comment_input.val()//请求评论内容，不需要用户id
+                            },                  //变量data，请求的数据列表，请求的对象不是服务器而是它上面的html中的数据
+                            //以上请求的变量遵守JSON格式赋值了，随后加入request中，随着url一项送达服务器端
+                            function()
+                            {
+                                if (data.res == True){
+                                comment_input.val('');//将填写的评论清空
+                                layer.msg('评论成功!');//web弹框提示
+                                }else{
+                                layer.msg(msg = data.error);//web弹框提示
+                                }
+                        );
+                        comment_input.val('')//将填写的评论清空
+                        layer.msg('评论成功');//web弹框提示
+                    }//.html()、.val()是jQuery的语法，具体解释看http://www.cnblogs.com/powerdk/p/4055590.html
+                )
+            }
+        )();
+        //以上注解基本上是我的脑洞......
+    </script>
+    	/*  display video duration when available
+	video.addEventListener("loadedmetadata", function () {
+	  vLength = video.duration.toFixed(1);
+	  document.getElementById("vLen").textContent = vLength; // global variable
+	}, false);
+*/
+
+
+-->

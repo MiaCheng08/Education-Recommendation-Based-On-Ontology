@@ -1,0 +1,55 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}注册{% endblock %}
+{% block extracss %}
+	<style>
+	.top {
+        height:40px;
+	}
+    </style>
+{% endblock %}
+{% block content %}
+    <div id="middle_content">
+        <div class="row bar_content">
+            <div class="col-sm-12 col-md-12 box-center top"></div>
+            <div class="col-sm-12 col-md-4 box-center"></div>
+            <div class="col-sm-12 col-md-4 box-center">
+		        <form class="form-base" onsubmit="return check(this)" action="/register/" method="post" enctype="multipart/form-data">
+			<!--onsubmit是Form事件属性，值为script ：在提交表单时触发，该属性只在form>标签中使用。
+			submit是Form标签里面的属性
+			"return check(this)" check在哪？ 该模板继承自base，去那里看一看，没找到，先过 mark一下
+			return又是要干什么：return表示在提交表单前先要执行check，check返回True时才可以提交表单，若是False则不提交表单-->
+			{% csrf_token %}
+			<div class="m-row">
+				<label for="id_username">用户名:</label>
+				<input type="text" class="form-control" placeholder="Username" id="id_username" maxlength="50" name="username" value="{{ username }}">
+			</div>
+			<div class="m-row">
+				<label for="id_password1">密码:</label>
+				<input type="password" class="form-control" placeholder="不少于6个字符" id="id_password1" name="password1" maxlength="128">
+			</div>
+			
+			<div class="m-row">
+				<label for="id_password1">再次输入密码:</label>
+				<input type="password" class="form-control" placeholder="不少于6个字符" id="id_password2" name="password2" maxlength="128">
+			</div>
+			<div class="m-row">
+				<label for="id_email">Email:</label>
+				<input type="email" class="form-control" placeholder="Email" id="id_email" name="email" maxlength="128">
+			</div>
+			<div class="m-row">
+				<label for="id_description">个人描述:</label>
+				<input type="text" class="form-control" placeholder="Description" id="id_description" maxlength="100" name="description" value="{{ description }}">
+			</div>
+			<div class="m-row" style="text-align: center">
+				<input type="submit"  value="注册" class="btn btn-success btn-lg" style="margin-top: 10px">
+                <!--这个submit点击后就会提交form吗？不需要明指出一下？：还真是这样：submit类型的input标签在form标签里面的时候-->
+				<div class="m-row">
+					{{ error }}
+				</div>
+			</div>
+		</form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

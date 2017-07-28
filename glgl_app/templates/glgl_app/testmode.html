@@ -1,0 +1,37 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}为准确地为您提供学习服务 请进行知识点测试{% endblock %}
+{% block extracss %}
+	<style>
+	.top {
+        height:60px;
+	}
+    </style>
+{% endblock %}
+{% block content %}
+    <div id="middle_content">
+        <div class="row bar_content">
+            <div class="col-sm-12 col-md-12 box-center top"></div>
+            <div class="col-sm-12 col-md-4 box-center"></div>
+            <div class="col-sm-12 col-md-4 box-center">
+                    <a href="/knowledge_test/">去进行知识点测试</a>
+                    <p>不去测试，请选择一种身份进行学习</p>
+                    <form name='form1' action='/submittestresults/1/' method='post'>
+                        {% csrf_token %}
+                        <a href='javascript:document.form1.submit();'><font color='#000000'>零基础</font></a>
+                    </form>
+
+                    <form name='form2' action='/submittestresults/2/' method='post'>
+                        {% csrf_token %}
+                        <a href='javascript:document.form2.submit();'><font color='#000000'>有一定基础</font></a>
+                    </form>
+
+                    <form name='form3' action='/submittestresults/3/' method='post'>
+                        {% csrf_token %}
+                        <a href='javascript:document.form3.submit();'><font color='#000000'>想提高</font></a>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

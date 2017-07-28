@@ -1,0 +1,148 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}上传视频{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" type="text/css" href="http://cdn.gbtags.com/ztree/3.5/zTreeStyle.css">
+{% endblock %}
+
+{% block content %}
+    <div class="center">
+        <div class="col-sm-12 col-md-6 box-left">
+            <div class="panel panel-success">
+                <div class="panel-heading">请点击下方的知识树为上传的视频添加知识标签</div>
+                <div class="panel-body">
+
+                    <ul class="ztree" id="ztree2"></ul>
+                </div>
+            </div>
+        </div><!--知识标签选择区域-->
+        <div class="col-sm-12 col-md-6 box-left">
+            <div class="panel panel-success">
+                <div class="panel-heading">上传</div>
+                <div class="panel-body">
+                {% if error %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <!--data-dismiss?aria-label?-->
+                            <span aria-hidden="true">
+                                &times;<!--显示结果是× 乘号-->
+                            </span>
+                        </button>
+                        <strong>Error!</strong> {{ error }}<!--strong是加粗-->
+                    </div>
+                {% endif %}
+                <div id="show-error"></div>
+                <form class="form-base" onsubmit="return check(this)" action="/upload/" method="post" enctype="multipart/form-data"> <!--action为空，即仍请求当前url-->
+                    {% csrf_token %}
+                    <div class="m-row">
+                        <label for="id_video">文件*</label>
+                        <input type="file" accept="video/*" class="form-control" id="id_video" name="video">
+                        <!--accept="video/*"规定了会接受的文件类型-->
+
+                        <label for="id_cover">封面</label>
+                        <input type="file" accept="image/*" class="form-control" id="id_cover" name="cover">
+
+                        <label for="id_title">标题*</label>
+                        <input type="text" class="form-control" placeholder="请输入标题" id="id_title" maxlength="100" name="title"
+                               value="{{ form.title.value }}">
+                        <!--name的用处显现出来了：form.title.value中的title就是该元素实例的name——错！2017.02.28
+                        form.title.value中的title是传进来的表单form中的属性，这个表单是复用video模型，所以更进一步说这个title是video模型的title属性
+                        .value就是取该属性的值，若不是表单，比如是video实例，那些直接video.title-->
+
+                        <label for="id_description">描述</label>
+                        <input type="text" class="form-control" placeholder="请输入视频描述" id="id_description" name="description"
+                               value="{{ form.description.value }}">
+
+                        <label for="id_description">视频讲师</label>
+                        <input type="text" class="form-control" placeholder="请输入视频描述" id="id_teacher" name="teacher"
+                               value="{{ form.description.teacher }}">
+
+                        <label for="id_tag">知识标签*</label>
+                        <input type="text" class="form-control" placeholder="" id="id_tag" name="tag"
+                               value="{{ form.tag.value }}">
+
+                        <label for="id_demand">该知识的大纲要求为</label>
+                        <input id="id_demand" class ="form-control" name = "demand">
+                        <!--需要写点啥-->
+                        </input>
+
+                        <label for="id_difficulty">视频难度*</label>
+                        <select id="id_difficulty" class ="form-control" name = "difficulty">
+                        <option value="0.2">相对大纲要求是基础</option>
+                        <option value="0.6">基本符合大纲要求</option>
+                        <option value="1.0">完全符合大纲要求</option>
+                        </select>
+                    </div>
+
+                    <div class="m-row" style="text-align: center">
+                        <input type="submit" class="btn btn-success btn-lg" style="margin-top: 10px" value="上传视频">
+                    </div>
+
+                    <div class="m-row" style="text-align: center">
+                        <a href = "/" class = "btn btn-default btn-lg" style="margin-top: 10px">返回主页</a>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div><!--上传区域-->
+    </div>
+{% endblock %}
+
+{% block extrascripts %}
+<script type="text/javascript" src="/static/js/form-check.js"></script>
+<script type="text/javascript" src="/static/js/check_video-upload-form.js"></script>
+<!--里面有个check函数，而且这里面用了这一个Script中的函数。也就是说这两个Scripts组成了check函数-->
+<script type="text/javascript" src="http://cdn.gbtags.com/ztree/3.5/jquery.ztree.all-3.5.min.js"></script>
+
+<script>
+
+  var setting =
+   {
+      check: {
+        enable: false,
+        chkboxType: { "Y": "ps", "N": "ps" }
+      },
+      data: {
+        simpleData: {
+          enable: false
+        }
+      },
+      view:{
+        showIcon:false,
+        nameIsHTML: true
+      },
+      callback : { //回调函数
+            onClick : onClick   //右键事件
+        },
+    };
+
+    var zTree;
+    var treeNodes;
+
+    $(function(){
+        $.ajax({
+            async : false,
+            cache:false,
+            type: 'GET',
+            dataType : "json",
+            url: "/getknowledgenodummy/",//请求的action路径
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success:function(data){ //请求成功后处理函数。
+                //alert(data);
+                treeNodes = data.children;   //把后台封装好的简单Json格式赋给treeNodes
+            }
+        });
+        $.fn.zTree.init($("#ztree2"), setting, treeNodes);
+        //zTree = $("#tree").zTree(setting, treeNodes);
+    });
+
+    function onClick(event, treeId, treeNode, clickFlag){
+        document.getElementById('id_tag').value = treeNode.name;
+        document.getElementById('id_demand').value = treeNode.demand;
+        //alert(name+"zzz");
+    }
+</script>
+{% endblock %}

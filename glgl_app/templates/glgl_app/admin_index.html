@@ -1,0 +1,369 @@
+{% extends "glgl_app/base.html" %}
+{% block title %}管理系统{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+<style>
+#like_column {
+  width: 90%;
+  height: 300px;
+}
+
+#favorite_column {
+  width: 90%;
+  height: 300px;
+}
+
+#column {
+  width: 90%;
+  height: 300px;
+}
+
+#partpath {
+  width: 90%;
+  height: 300px;
+}
+
+#graph {
+  width: 90%;
+  height: 300px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <div id="top_area">
+        <div class="center">
+            <div class="row bar_headImg">
+                <div class="col-md-12 col-sm-12">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="middle_content">
+        <div class="row bar_content">
+            <div class="col-sm-12 col-md-12 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">视频播放量Top10</div>
+                    <div class="panel-body" id="columnbody">
+                    </div>
+                </div>
+            </div><!--视频播放量Top10-->
+            <div class="col-sm-12 col-md-12 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">视频点赞量Top10</div>
+                    <div class="panel-body" id="likebody">
+                    </div>
+                </div>
+            </div><!--视频likeTop10-->
+            <div class="col-sm-12 col-md-12 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">视频收藏量Top10</div>
+                    <div class="panel-body" id="favoritebody">
+                    </div>
+                </div>
+            </div><!--视频favoriteTop10-->
+
+            <div class="col-sm-12 col-md-12 box-left">
+                <div class="navbar-form navbar-left">
+                    <div class="form-group">
+                        从
+                        <input id="start" type="text" class="form-control" placeholder="日期" name="start">
+                        到
+                        <input id="end" type="text" class="form-control" placeholder="日期" name="end">
+                    </div>
+                    <button class="btn btn-default" onclick="filter(this)">筛选</button>
+                </div>
+            </div><!--筛选-->
+
+            <div class="col-sm-12 col-md-6 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">学习路径反馈统计</div>
+                    <div class="panel-body" id="partbody">
+                        <!--<div  id="partpath"></div>-->
+                    </div>
+                </div>
+            </div><!--学习方案反馈统计-->
+            <div class="col-sm-12 col-md-6 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">学习方案反馈统计</div>
+                    <div class="panel-body" id="graphbody">
+                        <!--<div id="graph"></div>-->
+                    </div>
+                </div>
+            </div><!--知识图谱反馈统计-->
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrascripts %}
+<!-- Resources -->
+<script src="/static/js/ajax-send.js"></script>
+
+<script type="text/javascript" src="/static/js/canvasjs.min.js"></script>
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<!-- Chart code -->
+<script>
+function create_column(provider){
+    var chart = new CanvasJS.Chart("column",
+    {
+      animationEnabled: true,
+      axisY: {
+        title: "播放量"
+      },
+      legend: {
+        verticalAlign: "bottom",
+        horizontalAlign: "center"
+      },
+      theme: "theme2",
+      data: [
+
+      {
+        type: "column",
+        //showInLegend: true,
+        //legendMarkerColor: "grey",
+        //legendText: "MMbbl = one million barrels",
+        dataPoints: provider
+      }
+      ]
+    });
+    chart.render();
+}
+
+function create_like_column(provider){
+    var chart = new CanvasJS.Chart("like_column",
+    {
+      animationEnabled: true,
+      axisY: {
+        title: "点赞数"
+      },
+      legend: {
+        verticalAlign: "bottom",
+        horizontalAlign: "center"
+      },
+      theme: "theme2",
+      data: [
+
+      {
+        type: "column",
+        //showInLegend: true,
+        //legendMarkerColor: "grey",
+        //legendText: "MMbbl = one million barrels",
+        dataPoints: provider
+      }
+      ]
+    });
+    chart.render();
+}
+
+function create_favorite_column(provider){
+    var chart = new CanvasJS.Chart("favorite_column",
+    {
+      animationEnabled: true,
+      axisY: {
+        title: "收藏量"
+      },
+      legend: {
+        verticalAlign: "bottom",
+        horizontalAlign: "center"
+      },
+      theme: "theme2",
+      data: [
+
+      {
+        type: "column",
+        //showInLegend: true,
+        //legendMarkerColor: "grey",
+        //legendText: "MMbbl = one million barrels",
+        dataPoints: provider
+      }
+      ]
+    });
+    chart.render();
+}
+
+function create_graph(provider){
+	var graphchart = new CanvasJS.Chart("graph",
+	{
+        animationEnabled: true,
+		legend:{
+			verticalAlign: "bottom",
+			horizontalAlign: "center"
+		},
+		data: [
+		{
+			indexLabelFontSize: 20,
+          	indexLabel: "{indexLabel} {y}%",
+			indexLabelFontFamily: "Monospace",
+			type: "pie",
+			showInLegend: false,
+			toolTipContent: "{y}-<strong>#percent%</strong>",
+			dataPoints: provider
+		}
+		]
+	});
+	graphchart.render();
+}
+
+function create_partpath(provider){
+	var partpathchart = new CanvasJS.Chart("partpath",
+	{
+        animationEnabled: true,
+		legend:{
+			verticalAlign: "bottom",
+			horizontalAlign: "center"
+		},
+		data: [
+		{
+			indexLabelFontSize: 20,
+          	indexLabel: "{indexLabel} {y}%",
+			indexLabelFontFamily: "Monospace",
+			type: "pie",
+			showInLegend: false,
+			toolTipContent: "{y}-<strong>#percent%</strong>",
+			dataPoints: provider
+		}
+		]
+	});
+	partpathchart.render();
+}
+
+function core(data){
+    var graph = new Array();
+    var partpath = new Array();
+
+    graph = data.graph;
+    partpath = data.partpath;
+
+    if (graph.msg == "ok"){
+        create_partpath(partpath.data);
+    }else{
+        document.getElementById("graph").innerHTML = graph.msg;
+    };
+
+    if (partpath.msg == "ok"){
+        create_graph(graph.data);
+    }else{
+        document.getElementById("partpath").innerHTML = partpath.msg;
+    }
+}
+
+function update(){
+    $("#partbody").append("<div id=\"partpath\"></div>");
+    $("#graphbody").append("<div id=\"graph\"></div>");
+
+    $("#columnbody").append("<div id=\"column\"></div>");
+    $("#likebody").append("<div id=\"like_column\"></div>");
+    $("#favoritebody").append("<div id=\"favorite_column\"></div>");
+
+    $.get('/getfeedbackdata/',
+        function(data){
+            core(data);
+            var watch = new Array();
+            watch = data.watch;
+            if (watch.playmsg == "ok"){
+                create_column(watch.play);
+            }else{
+                document.getElementById("column").innerHTML = watch.playmsg;
+            }
+
+            if (watch.likemsg == "ok"){
+                create_like_column(watch.like);
+            }else{
+                document.getElementById("like_column").innerHTML = watch.likemsg;
+            }
+
+            if (watch.favoritemsg == "ok"){
+                create_favorite_column(watch.favorite);
+            }else{
+                document.getElementById("favorite_column").innerHTML = watch.favoritemsg;
+            }
+        }
+    )
+}
+
+function filter(){
+    $("#partpath").remove();
+    $("#graph").remove();
+
+    $("#partbody").append("<div id=\"partpath\"></div>");
+    $("#graphbody").append("<div id=\"graph\"></div>");
+
+    $.get('/getfeedbackdata/',
+        {
+            "start": $('input[name="start"]').val(),
+            "end": $('input[name="end"]').val()
+        },
+        function(data){
+            core(data);
+        }
+    );
+}
+
+$("#start").datepicker({
+    changeMonth :true,
+    changeYear :true,
+    maxDate: 0
+});
+$("#end").datepicker({
+    changeMonth :true,
+    changeYear :true,
+    maxDate: 0
+});
+
+$(document).ready(
+    update()
+);
+
+</script>
+{% endblock %}
+
+<!---
+<div class="col-sm-12 col-md-12 box-left">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">网站访问情况分布图</div>
+                    <div class="panel-body" id="linebody">
+                    </div>
+                </div>
+            </div>
+function create_line(){
+    data = new Date(2012, 01, 1);
+    var chart = new CanvasJS.Chart("line",
+    {
+      theme: "theme2",
+      animationEnabled: true,
+      axisX: {
+        valueFormatString: "MMM",
+        interval:1,
+        intervalType: "month"
+      },
+      axisY:{
+        includeZero: false
+      },
+      data: [
+        {
+            type: "line",
+            lineThickness: 3,
+            dataPoints: [
+            { x: data, y: 414 },
+            { x: new Date(2012, 02, 1), y: 520 },
+            { x: new Date(2012, 03, 1), y: 460 },
+            { x: new Date(2012, 04, 1), y: 450 },
+            { x: new Date(2012, 05, 1), y: 500 },
+            { x: new Date(2012, 06, 1), y: 480 },
+            { x: new Date(2012, 07, 1), y: 480 },
+            { x: new Date(2012, 08, 1), y: 410 },
+            { x: new Date(2012, 09, 1), y: 500 },
+            { x: new Date(2012, 10, 1), y: 480 },
+            { x: new Date(2013, 11, 1), y: 510 }
+            ]
+        }
+      ]
+    });
+    chart.render();
+}
+->

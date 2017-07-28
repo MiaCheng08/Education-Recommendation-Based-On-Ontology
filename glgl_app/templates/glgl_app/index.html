@@ -1,0 +1,168 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}{{pageTitle}}{% endblock %}
+<!--这个block是继承base.html，在其title后面续上该模板的title，
+显示在浏览器最上面
+这个{{pageTitle}}用了模板变量，在view.py中渲染该模板时，这个位置将被pageTitle真正的值取代-->
+
+{% block extracss %}
+	<link rel="stylesheet" type= "text/css" href="/static/css/index.css" >
+    <link rel="stylesheet" href="/static/css/jquery.orgchart.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <style>
+        #myCanvas{
+            box-shadow: 0 0 5px black;
+            margin-top: 50px;
+            margin-left: 50px;
+        }
+        #myCanvas2{
+            box-shadow: 0 0 5px salmon;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}<!--使用该模板标签在base.html规定的区域继承并添加元素-->
+	{% if popular_videos or pageTitle == '首页' %}<!--首页-->
+    <!--popular_videos和pageTitle都是调用该index模板时可能传进来的变量-->
+        <div id="myCarousel" class="carousel slide">
+            <!-- 轮播（Carousel）指标 -->
+            <ol class="carousel-indicators"><!-- 0l标签代表有序列表，界面上是图片上靠下的三个小圆圈 -->
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol><!-- 通过#关联上css样式表中的id  data-target和data-slide-to不明白，可能是自己扩展的属性？另外这个app的列表ol和ul都是横着来的-->
+
+            <!-- 轮播（Carousel）项目 -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <a href='/video/43/'><img src="/static/images/lb1.jpg" alt="First slide"></a>
+                </div><!--这里面的img路径是死的，不好不好  alt是图片的替代文字-->
+                <div class="item">
+                    <a href='/video/31/'><img src="/static/images/lb2.jpg" alt="Second slide"></a>
+                </div>
+                <div class="item">
+                    <a href='/about/'><img src="/static/images/lb3.jpg" alt="Third slide"></a>
+                </div>
+            </div>
+            <!-- 轮播（Carousel）导航 ：左右两个箭头-->
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div><!--首页：大滚屏-->
+
+        {% for video in popular_videos %}<!--首页：受欢迎视频展示-->
+            <div class="col-md-3 col-sm-6 col-xs-12 dd-grid">
+                <figure class="effect-sadie"><!--这个figure标签应用的类，从字面上能够猜出一点：使用-->
+                    <img src="media/{{video.cover}}" alt="img02" class="img-responsive center-block"/>
+                    <figcaption>
+                        <h2>{{ video.title }}</h2>
+                        <p>up主: {{ video.uploader.username }} <br>播放量: {{ video.play }}</p>
+                        <a href="{{ video.get_absolute_url }}">View more</a>  <!--View more在界面上没有看到-->
+                    </figcaption>
+                </figure>
+            </div>
+        {% endfor %}
+
+	{% else %}<!--分类页面--><!--这个是当点击了导航栏的分类所触发的 -->
+		{% for video in videos_set %}
+        <!--videos_set哪里来的？是在view.py调用/渲染该模板时，用的上下文context中“传进来的”，
+		同pageTitle来路一样，只是被用到的方式不同，pageTitle通过模板变量（双括号）被显示在界面上，
+		而category_videos以及前面的popular_videos和pageTitle则是什么也没加直接用于模板标签——python语句中-->
+            <div class="col-md-3 col-sm-6 col-xs-12 dd-grid">
+                <figure class="effect-sadie">
+                    <img src="/media/{{video.cover}}" alt="img02" class="img-responsive center-block"/>
+                    <figcaption>
+                        <h2>{{ video.title }}</h2>
+                        <p>up主: {{ video.uploader.username }} <br>播放量: {{ video.play }}</p>
+                        <a href="{{ video.get_absolute_url }}">View more</a>
+                    </figcaption>
+                    <!--figcaption用在figure中规定figure元素的标题-->
+                </figure>
+                <!--figure是HTML5中的新标签，用于规定独立的流内容，如图像、图表、照片、代码等 -->
+            </div>
+		{% endfor %}
+	{% endif %}
+{% endblock %}
+
+{% block extrascripts %}
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/jakerella/jquery-mockjax/master/dist/jquery.mockjax.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.orgchart.js"></script>
+    <script>
+      'use strict';
+        (function($){
+          $(function() {
+            $.mockjax({
+              url: '/orgchart/initdata',
+              responseTime: 1000,
+              contentType: 'application/json',
+              responseText: {
+                'name': '高等数学上册',
+                'title': '1.0',
+                'children': [
+                  { 'name': '数列极限', 'title': 'department manager' },
+                  { 'name': '函数', 'title': 'department manager',
+                    'children': [
+                      { 'name': 'Tie Hua', 'title': 'senior engineer' },
+                      { 'name': 'Hei Hei', 'title': 'senior engineer',
+                        'children': [
+                          { 'name': 'Pang Pang', 'title': 'engineer' },
+                          { 'name': 'Xiang Xiang', 'title': 'UE engineer' }
+                        ]
+                      }
+                    ]
+                  },
+                  { 'name': '映射', 'title': 'department manager' },
+                  { 'name': 'Yu Li', 'title': 'department manager' },
+                  { 'name': 'Hong Miao', 'title': 'department manager' },
+                  { 'name': 'Yu Wei', 'title': 'department manager' },
+                  { 'name': 'Chun Miao', 'title': 'department manager' },
+                  { 'name': 'Yu Tie', 'title': 'department manager' }
+                ]
+              }
+            });
+            $('#chart-container').orgchart({
+              'data' : '/orgchart/initdata',
+              'depth': 3,
+              'nodeContent': 'title'
+            });
+          });
+        })(jQuery);
+    </script>
+
+    <script>
+        //获取canvas对象
+        var canvas = document.getElementById("myCanvas");
+        //上下文:理解：canvas标签内置画笔
+        var ctx = canvas.getContext("2d");//目前仅支持2d画板
+
+        //绘制圆形或者圆弧：arc()
+        ctx.beginPath();
+        //arc(x: Number, y: Number, radius: Number, startAngle: Number, endAngle: Number, anticlockwise: Boolean): none
+        //绘制一个以x,y为圆心，radius为半径，从startAngle弧度开始到endAngle结束，anticlockwise：绘制方向，布尔值，默认false顺时针
+        ctx.arc(200,200,50,0,Math.PI*2,false);
+
+        //顺时针绘制半圆
+        //ctx.arc(200,200,50,0,Math.PI,false);
+
+        //逆时针绘制半圆
+        //ctx.arc(200,200,50,0,Math.PI,true);
+        //总结:绘制的起点位置默认最右边
+
+        //ctx.arc(200,200,50,0,Math.PI/2,true);
+
+        //起始位置为90度：默认的右边顺时针走90度为起始位置
+        //ctx.arc(200,200,50,Math.PI/2,Math.PI,true);
+
+        //绘制
+        //ctx.stroke();
+        //填充绘制
+        ctx.fill();
+    </script>
+{% endblock %}

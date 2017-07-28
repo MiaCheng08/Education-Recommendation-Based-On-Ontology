@@ -1,0 +1,210 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}个人主页{% endblock %}
+
+{% block extracss %}
+<style>
+.dataTables_length{
+    weight:50%;
+}
+.paginate_button {
+    weight:20%;
+}
+.table{
+     weight:100%,
+     height:100%;
+}
+</style>
+{% endblock %}
+{% block content %}
+    <div id="top_area">
+        <div class="center">
+            <div class="row bar_headImg">
+                <div class="col-md-12 col-sm-12">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="middle_content">
+        <div class="row bar_content">
+            <div class="col-sm-12 col-md-8 box-left">
+                <div class="panel panel-success">
+                    <div class="panel-heading">我的学习进度</div>
+                    <div class="panel-body">
+                    {% if histories %}
+                        <table id="datatables" class="table">
+                              <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>知识点</th>
+                                    <th>视频</th>
+                                    <th>掌握程度变化量</th>
+                                    <th>打分</th>  <!--自定义列-->
+                                </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                        </table>
+                    {% else %}
+                        <p>你还没有完整看完过一个视频并打分，赶快去学习吧</p>
+                    {% endif %}
+                    </div>
+                </div>
+            </div><!--个人学习进度-->
+            <div class="col-sm-12 col-md-4 box-left"><!--个人上传的视频-->
+                <div class="panel panel-danger">
+                    <div class="panel-heading">我的基本信息</div>
+                    <div class="panel-body">
+                        <img class="small-headimage" src='/media/{{user.userextraprofile.headimage}}'><br>
+                        <label class="page_username">用户名：{{ user.username }}</label><br>
+                        <label>自我描述：{{ user.userextraprofile.description }}</label><br>
+                        <label>邮箱：{{ user.email }}</label>
+                    </div>
+                </div>
+            </div><!--个人资料-->
+            <div class="col-sm-12 col-md-8 box-left">
+                <div class="panel panel-success">
+                    <div class="panel-heading">我已经上传的视频</div>
+                    <div class="panel-body">
+                        <div class="m-row">
+                            {% if video_set %}
+                                {% for video in video_set %}
+                                    <div class="col-md-3 col-sm-6 col-xs-12 show-video">
+                                        <a href="/video/{{ video.id }}" title="{{ video.title }}">
+                                            <img src="/media/{{video.cover}}" class="img-responsive center-block"/>
+                                        </a>
+                                        <h3>{{ video.title }}</h3>
+                                        <div class="glyphicon glyphicon-play" aria-hidden="true">：<span id = "playnum">{{video.play}}</span></div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>你还没有上传过视频哦</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div><!--个人已上传的视频-->
+            <div class="col-sm-12 col-md-8 box-left">
+                <div class="panel panel-success">
+                    <div class="panel-heading">收藏夹</div>
+                    <div class="panel-body">
+                        <div class="m-row">
+                            {% if favorites %}
+                                {% for video in favorites %}
+                                    <div class="col-md-3 col-sm-6 col-xs-12 show-video">
+                                        <a href="/video/{{ video.id }}" title="{{ video.title }}">
+                                            <img src="/media/{{video.cover}}" class="img-responsive center-block"/>
+                                        </a>
+                                        <h3>{{ video.title }}</h3>
+                                        <div class="glyphicon glyphicon-play" aria-hidden="true">：<span>{{video.play}}</span></div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>你还没有收藏过视频哦</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div><!--收藏夹-->
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrascripts %}
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+/** 格式化输入字符串**/
+//用法: "hello{0}".format('world')；返回'hello world'
+ String.prototype.format= function(){
+    var args = arguments;
+    return this.replace(/\{(\d+)\}/g,function(s,i){
+        return args[i];
+    });
+}
+
+$(document).ready(function() {
+    var table = $('#datatables').DataTable({
+        "autoWidth": false,
+        "paging": true,
+        //"dom": 'iCflrtp',
+        "dom": '<lf<t>ip>',
+        "iDisplayLength": 5,//默认1页的行数
+        "lengthMenu": [[5, 10, 50, -1], [5, 10, 50, "所有"]],
+        "stateSave": false,
+        "processing": true,//true:保存当前用户的状态的
+        "order": [
+                [0, "desc"],
+                [1, "asc"],
+                [2, "desc"],
+            ],//表示先对第1列进行升序排序，再按照第二列升序排序，最后按照第三列降序排序
+        "columnDefs": [
+              {width: '25%', targets: 3},
+              {
+                "targets": [2], // 目标列位置，下标从0开始
+                "data": "title", // 数据列名
+                "render": function(data, type, full) { // 返回自定义内容
+                    var temp= new Array();
+                    temp = data.split(",")
+                    return "<a href='/video/" + temp[1] + "'>{0}</a>".format([temp[0]]);
+                }
+              },
+            ],
+        "columns": [{//指定了传过来的数据的字段
+            "data": "date",
+        }, {
+            "data": "knowledge",
+        }, {
+            "data": "title",
+
+        }, {
+            "data": "change",
+
+        }, {
+            "data": "score",
+        }],//"visible":falsevisible字段默认是true，如果设置false的话，显示的时候是隐藏的，当然也可以通过空间取消其隐藏。
+        "sPaginationType": "full_numbers",
+        "oLanguage": {
+            "sProcessing": "努力加载数据中.",
+            "sLengthMenu": "每页显示 _MENU_ 条记录",
+            "sZeroRecords": "抱歉， 没有找到",
+            "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+            "sInfoEmpty": "没有数据",
+            "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+            "sZeroRecords": "没有检索到数据",
+            "sSearch": "模糊查询:  ",
+            "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "前一页",
+                "sNext": "后一页",
+                "sLast": "尾页"
+            }
+        }
+    });
+    $.ajax({
+        url: "history/",
+        "type": "GET",
+        success : function (resp){
+            // would look something like ['val1','val2', 'etc']
+            //var column_data = $.parseJSON(resp);
+            var column_data = resp.history_set;
+            // adding data to datatables
+            // if column_data is 1 row
+            if (column_data.length < 2){
+            $('#datatables').dataTable().fnAddData(column_data);
+            }else{
+                // to add multiple rows (array of arrays, just loop)
+                for (var j=0;j<=column_data.length-1;++j){
+                    // adding each row with its column data
+                    $('#datatables').dataTable().fnAddData(column_data[j]);
+                }
+            }
+        },
+        error: function(jqXHR, textStatus, ex) {
+          console.log(textStatus + "," + ex + "," + jqXHR.responseText);
+        }
+    });
+    })
+</script>
+{% endblock %}

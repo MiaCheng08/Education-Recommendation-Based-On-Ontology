@@ -1,0 +1,39 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}学习方案{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="/static/css/kn_other_map.min.css">
+<style>
+.vz-weighted_tree-viz {
+    overflow:scroll;
+}
+</style><!--这个是设置滚动条元素-->
+{% endblock %}
+
+{% block content %}
+<div class="mainCol padding15px addcolor">
+    <div class="setborder"><!--是setborder让它有了阴影-->
+        <div id="mapRow" class="kl_str"></div><!--在loadmap函数里面选定了id为mapRow的gaidiv进行扩展的-->
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script type="text/javascript" src="/static/js/load_force.js"></script>
+<script type="text/javascript" src="/static/weight/lib/d3.min.js" charset="utf-8"></script>
+<script>
+    $(function () {
+        var dw=1140,dh=940,options;
+        options = {
+            width: dw,
+            height: dh
+        };
+        $.get('/showpath/',
+            function(data){
+            var nodes = data.nodes,lines = data.lines
+            loadMap(options, nodes, lines);
+        })
+    });
+</script>
+{% endblock %}

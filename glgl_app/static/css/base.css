@@ -1,0 +1,40 @@
+.footer {
+    text-align: center;
+    bottom: 0;
+    color: #000;
+    width: 100%;
+    padding: 19px 15px 0 15px;
+}
+
+html, body {
+    font-family: "Roboto", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+/*加逗号是并列关系，不加逗号而是空格则是复合关系*/
+.navbar{
+	background-color: rgba(0,2,64,1);
+    border-color: rgba(0,2,64,1);
+    z-index: 1000;
+}
+
+.container {
+    max-width: 1300px;
+}
+
+.num {
+    color: orange;
+    margin-left: 3px;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: rgb(204,204,221)
+}
+/* element>element 	eg:div>p 	means:选择父元素为 <div> 元素的所有 <p> 元素*/
+.navbar-default .navbar-nav>li>a:focus,.navbar-default .navbar-nav>li>a:hover {
+    color: rgb(139,140,180);
+    background-color: transparent
+}
+/* :focus 	eg:input:focus 	means:选择获得焦点的 input 元素*/
+.small-headimage{
+	height:90px;
+	width:90px;
+}

@@ -1,0 +1,33 @@
+{% extends "glgl_app/base.html" %}
+<!--从search.py中传过来的参数有pattern和video，pattern没有使用-->
+{% block title %}搜索{% endblock %}
+
+{% block extracss %}
+	<link rel="stylesheet" type= "text/css" href="/static/css/index.css">
+{% endblock %}
+
+{% block content %}
+	<h3>搜索结果</h3>
+	{% for video in videos %}<!--疑问：若检索出来不视频，那么不会跳过该循环吗？-->
+    <!--与popular和category一样，后面想想看能不能把这里修改下，模块下-->
+		<div class="col-md-3 col-sm-6 col-xs-12 dd-grid">
+			<figure class="effect-sadie">
+				<img src="/media/{{video.cover}}" alt="img02" class="img-responsive center-block"/>
+				<figcaption>
+					<h2>{{ video.title }}</h2>
+					<p>up主: {{ video.uploader.username }} <br>播放量: {{ video.play }}</p>
+					<a href="{{ video.get_absolute_url }}">View more</a>
+				</figcaption>
+			</figure>
+		</div>
+		{% empty %}<!--empty是从哪里来的？下面这块代码的作用很明显，但是感觉放在循环里面逻辑有点不对劲
+		这个empty检查的是上面div裹着figure标签的html是否产生了视图，若没有则-->
+		<div class="search-res">
+			<div class="m-row">
+				<div class="col-md-12">
+					<p>抱歉，没有找到相关视频</p>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

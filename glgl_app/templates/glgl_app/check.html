@@ -1,0 +1,25 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}视频审核列表{% endblock %}
+
+{% block extracss %}
+	<link href="/static/css/index.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+	<div>
+		<h2>待审核视频</h2>
+	</div>
+	{% for video in checking_videos %}
+	<div class="col-md-3 col-sm-6 col-xs-12 dd-grid">
+		<figure class="effect-sadie">
+			<img src="/media/{{video.cover}}" alt="img02" class="img-responsive center-block"/>
+			<figcaption>
+			<h2>{{ video.title }}</h2>
+			<p>up主: {{ video.uploader.username }} <br>播放量: {{ video.play }}</p>
+			<a href="{{ video.get_absolute_url }}">View more</a>
+			</figcaption>
+		</figure>
+	</div>
+	{% endfor %}
+{% endblock %}

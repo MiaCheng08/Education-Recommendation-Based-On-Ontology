@@ -1,0 +1,482 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}知识点测试{% endblock %}
+
+{% block content %}
+    <div id="middle_content">
+        <div class="row bar_content">
+            <div class="col-sm-12 col-md-2 box-center"></div>
+            <div class="col-sm-12 col-md-8 box-center">
+                <div class="panel panel-success">
+                    <div class="panel-heading" id="knowledge">测试马上开始</div>
+                    <div class="panel-body">
+                        <div class="demand">
+                            <label for="demand">大纲要求:</label>
+                            <p id="demand"></p>
+                        </div>
+
+                        <div class="result">
+                            <label for="result">掌握程度:</label>
+                            <form id="result">
+                                <input type="radio" name="achieve" value=0.0 />不会<br />
+                                <input type="radio" name="achieve" checked="checked" value=0.2 />会一点<br />
+                                <input type="radio" name="achieve" value=0.6 />基本会，有待提高<br />
+                                <input type="radio" name="achieve" value=1.0 />完全达到大纲要求
+                            </form>
+                        </div>
+                        <div class="m-row" style="text-align: center">
+                            <button id="next" class="btn btn-success btn-lg" onclick="next_click(this)">下一题</button>
+                        </div>
+                        <form id="submit" name="results" action="/submittestresults/4/" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" id="results" name="results">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrascripts %}
+
+<script>
+    //Once the document is ready we set javascript and page settings
+    var knowledge_sets;//存储所有知识点 Object类型
+
+    var knowledge_set = new Object();//存储当前正在询问的知识点 Object类型
+
+    var knowledge_peers_children_set = new Object();//存储每个知识点的旁知识点 Object类型
+
+    var knowledge_set_peers = new Array();//存储当前正在询问的知识点的旁知识点集合 数组类型，数组元素是object
+    var knowledge_set_children = new Array();//存储当前正在询问的知识点的子知识点集合 数组类型，数组元素是object
+
+    var results_array = new Array();//存储各个知识点的测试结果,数组类型，数组元素是object
+
+    var submit = $('#submit');//为了添加按钮
+
+    var next = $('#next');//为了删"下一题"按钮
+
+    $(document).ready(
+        $.get('/getallknowledge/', function(root) {
+
+            knowledge_sets = root;//传进来的是对象
+
+            knowledge_set_peers = knowledge_sets.children;
+            knowledge_set = knowledge_set_peers[0];
+            knowledge_set_children = knowledge_set.children;//或=knowledge_set_peers[0].children;knowledge_sets.children[0]
+            //.children是对象knowledge_sets的某一属性，该属性值是数组，数组元素是对象，函数是某一对象
+
+            knowledge_peers_children_set[knowledge_set.name] = knowledge_set_peers;
+            update();//初始化
+            }
+        )
+    );
+
+    function next_click(){
+        result =parseFloat($('input[name="achieve"]:checked').val());//获取被选中的值
+        if (knowledge_set_peers.length>1 || knowledge_set_children.length>0){
+            if (result <= 0){//掌握程度为0，其子知识点不再询问,转向peers，该部分当没有peers可转算走到头
+                //更新待询问知识点、旁知识点集合和子知识点集合
+                peers();
+            }else{//只要result不为0，该部分只有当走到头，才会转向peers
+                //存结果
+                name = new String(knowledge_set.name);
+                String(result);
+                temp = name+":"+result;
+                results_array.push(temp);
+                //更新待询问知识点、旁知识点集合和子知识点集合
+                if (knowledge_set_children.length>0){//还没走到尽头
+                    children();
+                }else{//走到尽头了
+                    peers();
+                }
+            }
+        }else{//向下、向旁边都不行的时候，测试就结束了
+            up();
+        }
+    }
+
+    function peers(){
+        if(knowledge_set_peers.length>1){
+        //存在这种情况：peers没了，children还有，但是当前知识点的result为0，会跳到peers里面
+        //所以要在peers里面留个end函数
+            //更新待询问知识点、旁知识点集合和子知识点集合
+            knowledge_set_peers.shift();//除去已询问完毕的知识点（处在数组第一位置上），后面的元素自动前移
+            knowledge_set = knowledge_set_peers[0];
+            //更新子知识点集合
+            if(knowledge_set.children)//当有子节点 赋值，没有时赋空数组，这样保证不会使得knowledge_set_children成为undefined
+                knowledge_set_children = knowledge_set.children;
+            else
+                knowledge_set_children = new Array();
+
+            knowledge_peers_children_set[knowledge_set.name] = knowledge_set_peers;
+            //更新HTML元素内容
+            update();
+        }else{
+            up();//既然是往旁边之路跳，但是又没有peers了，说明目前是向下向左都不可以，就要试一试往上跳
+        }
+    }
+
+    function children(){
+        //更新待询问知识点、旁知识点集合和子知识点集合
+        knowledge_set_peers = knowledge_set_children;//且变为旁节点
+        knowledge_set = knowledge_set_peers[0];//更新待询问的知识点
+        //更新子知识点集合
+        if(knowledge_set.children)//当有子节点 赋值，没有时赋空数组，这样保证不会使得knowledge_set_children成为undefined
+            knowledge_set_children = knowledge_set.children;
+        else
+            knowledge_set_children = new Array();
+
+        knowledge_peers_children_set[knowledge_set.name] = knowledge_set_peers;
+        //更新HTML元素内容
+        update();//自始至终都只询问第一个元素，因为询问完毕，将删除该元素，后面的元素们会前移
+    }
+
+    function up(){
+        if(String(knowledge_set.father) != "math"){
+           var father_name = knowledge_set.father;
+           var temp = knowledge_peers_children_set[father_name];//保护一下原来的备份，免受移除
+           if (temp.length ==1)//向上走，右边的节点向上走都是满的，需要从树叶子向上迭代，直到"math",进入end函数
+           {
+             knowledge_set = temp[0];
+             up();
+           }else{
+               temp.shift();
+               knowledge_set_peers = temp;
+               knowledge_set = knowledge_set_peers[0];
+                //更新子知识点集合
+                if(knowledge_set.children)
+                    knowledge_set_children = knowledge_set.children;
+                else
+                    knowledge_set_children = new Array();
+
+                knowledge_peers_children_set[knowledge_set.name] = knowledge_set_peers;
+                //更新HTML元素内容
+                update();//自始至终都只询问第一个元素，因为询问完毕，将删除该元素，后面的元素们会前移
+            }
+        }else{
+            end();
+        }
+    }
+
+    function end(){
+        next.remove();//删除"下一题"按钮 使用的函数来自jquery
+        submit.append("<button>提交测试结果</button>").add("class","btn btn-success btn-lg");//添加提交按钮
+        document.getElementById('results').value = results_array;//jQurey用起来没有原生态的JS好用啊，可能是我打开方式的不对吧 确实是打开方式不对
+    }
+
+    function update(){
+        document.getElementById("knowledge").innerHTML = knowledge_set["name"];
+        document.getElementById("demand").innerHTML = knowledge_set.demand;//name和demand两个属性
+    }
+</script>
+
+<!--
+<script>
+/**
+* 从对象数组中删除属性为objPropery，值为objValue元素的对象
+* @param Array arrPerson  数组对象
+* @param String objPropery  对象的属性
+* @param String objPropery  对象的值
+* @return Array 过滤后数组
+*/
+function remove(arrPerson,objPropery,objValue)
+{
+   return $.grep(arrPerson, function(cur,i){
+          return cur[objPropery]!=objValue;
+       });
+}
+/**
+* 从对象数组中获取属性为objPropery，值为objValue元素的对象
+* @param Array arrPerson  数组对象
+* @param String objPropery  对象的属性
+* @param String objPropery  对象的值
+* @return Array 过滤后的数组
+*/
+function get(arrPerson,objPropery,objValue)
+{
+   return $.grep(arrPerson, function(cur,i){
+          return cur[objPropery]==objValue;
+       });
+}
+/**
+* 显示对象数组信息
+* @param String info  提示信息
+* @param Array arrPerson  对象数组
+*/
+function showPersonInfo(info,arrPerson)
+{
+   $.each(arrPerson, function(index,callback){
+         info+="Person id:" + arrPerson[index].id + " name:" +  arrPerson[index].name+ " sex:"+ arrPerson[index].sex+" age:"+  arrPerson[index].age+"/r/t";
+    });
+    alert(info);
+}
+//测试数据
+var arrPerson=new Array();
+var person=new Object();
+person.id=1;
+person.name="帅哥";
+person.sex="男";
+person.age=30;
+arrPerson.push(person);
+
+person=new Object();
+person.id=2;
+person.name="美眉甲";
+person.sex="女";
+person.age=28;
+arrPerson.push(person);
+
+person=new Object();
+person.id=3;
+person.name="美眉乙";
+person.sex="女";
+person.age=20;
+arrPerson.push(person);
+
+//测试删除
+showPersonInfo("原始数组：/r/t",arrPerson);
+arrPerson=remove(arrPerson,"id",1);
+showPersonInfo("删除之后：/r/t",arrPerson);
+//测试获取
+arrPerson=get(arrPerson,"id",3);
+showPersonInfo("只获取ID为3的元素：/r/t",arrPerson);
+
+</script>
+
+
+
+<script>
+    //Once the document is ready we set javascript and page settings
+    var knowledge_sets;//存储所有知识点 Object类型
+
+    var knowledge_set = new Object();//存储当前正在询问的知识点 Object类型
+
+    var knowledge_set = new Object();//存储当前正在询问的知识点 Object类型
+    var knowledge_set_children = new Array();//存储当前正在询问的知识点的子知识点集合 数组类型，数组元素是object
+
+    var results_array = new Array();//存储各个知识点的测试结果,数组类型，数组元素是object
+
+    var submit = $('#submit');//为了添加按钮
+
+    var next = $('#next');//为了删"下一题"按钮
+
+    $(document).ready(
+        $.get('/get_all_knowledge/', function(root) {
+
+            knowledge_sets = root;//传进来的是对象
+
+            knowledge_set_children = knowledge_sets.children;
+            knowledge_set = knowledge_set_children[0];
+            //.children是对象knowledge_sets的某一属性，该属性值是数组，数组元素是对象，函数是某一对象
+
+            update();//初始化
+            //next_click();
+            //end();
+            }
+        )
+    );
+
+    function next_click(){
+        result =parseFloat($('input[name="achieve"]:checked').val());//获取被选中的值
+        if (knowledge_set_children.length>0){
+            if (result <= 0){//掌握程度为0，其子知识点不再询问,转向peers，该部分当没有peers可转算走到头
+                //更新待询问知识点、旁知识点集合和子知识点集合
+                peers();
+            }else{//只要result不为0，该部分只有当走到头，才会转向peers
+                //存结果
+                name = new String(knowledge_set.name);
+                String(result);
+                temp = name+":"+result;
+                results_array.push(temp);
+                //更新待询问知识点、旁知识点集合和子知识点集合
+                if (knowledge_set_children.length>0){//还没走到尽头
+                    children();
+                }else{//走到尽头了
+                    peers();
+                }
+            }
+        }else{//向下、向旁边都不行的时候，测试就结束了
+            end();
+        }
+    }
+
+    function peers(){
+        if(knowledge_set_children.length>1){
+            //更新待询问知识点、旁知识点集合和子知识点集合
+            knowledge_set_children.shift();//除去已询问完毕的知识点（处在数组第一位置上），后面的元素自动前移
+            knowledge_set = knowledge_set_children[0];
+
+            //更新HTML元素内容
+            update();
+        }else{
+            up();//既然是往旁边之路跳，但是又没有peers了，说明目前是向下向左都不可以，就要试一试往上跳
+            end();
+        }
+    }
+
+    function up(){
+        father = get(knowledge_sets,"name",knowledge_set.father.father.name);
+        knowledge_sets = remove
+
+    }
+
+    /**
+    * 从对象数组中获取属性为objPropery，值为objValue元素的对象
+    * @param Array arrPerson  数组对象
+    * @param String objPropery  对象的属性
+    * @param String objPropery  对象的值
+    * @return Array 过滤后的数组
+    */
+    function get(arrPerson,objPropery,objValue)
+    {
+       return $.grep(arrPerson, function(cur,i){
+              return cur[objPropery]==objValue;
+           });
+    }
+
+    /**
+    * 从对象数组中删除属性为objPropery，值为objValue元素的对象
+    * @param Array arrPerson  数组对象
+    * @param String objPropery  对象的属性
+    * @param String objPropery  对象的值
+    * @return Array 过滤后数组
+    */
+    function remove(arrPerson,objPropery,objValue)
+    {
+       return $.grep(arrPerson, function(cur,i){
+              return cur[objPropery]!=objValue;
+           });
+    }
+
+    function children(){
+        //更新待询问知识点、旁知识点集合和子知识点集合
+        knowledge_set_peers = knowledge_set_children;//且变为旁节点
+        knowledge_set = knowledge_set_peers[0];//更新待询问的知识点
+        //更新子知识点集合
+        if(knowledge_set.children)//当有子节点 赋值，没有时赋空数组，这样保证不会使得knowledge_set_children成为undefined
+            knowledge_set_children = knowledge_set.children;
+        else
+            knowledge_set_children = new Array()
+
+        //更新HTML元素内容
+        update();//自始至终都只询问第一个元素，因为询问完毕，将删除该元素，后面的元素们会前移
+    }
+
+    function end(){
+        next.remove();//删除"下一题"按钮 使用的函数来自jquery
+        submit.append("<button>提交测试结果</button>").add("class","send_results");//添加提交按钮
+        document.getElementById('results').value = results_array;//jQurey用起来没有原生态的JS好用啊，可能是我打开方式的不对吧 确实是打开方式不对
+    }
+
+    function update(){
+        document.getElementById("knowledge").innerHTML = knowledge_set["name"];
+        document.getElementById("demand").innerHTML = knowledge_set.demand;//name和demand两个属性
+    }
+</script>
+
+<script>
+    //Once the document is ready we set javascript and page settings
+    var knowledge_sets;//存储所有知识点 Object类型
+
+    var knowledge_set = new Object();//存储当前正在询问的知识点 Object类型
+    var knowledge_set_peers = new Array();//存储当前正在询问的知识点的旁知识点集合 数组类型，数组元素是object
+    var knowledge_set_children = new Array();//存储当前正在询问的知识点的子知识点集合 数组类型，数组元素是object
+
+    var results_array = new Array();//存储各个知识点的测试结果,数组类型，数组元素是object
+
+    var submit = $('#submit');//为了添加按钮
+
+    var next = $('#next');//为了删"下一题"按钮
+
+    $(document).ready(
+        $.get('/get_all_knowledge/', function(root) {
+
+            knowledge_sets = root;//传进来的是对象
+
+            knowledge_set_peers = knowledge_sets.children;
+            knowledge_set = knowledge_set_peers[0];
+            knowledge_set_children = knowledge_set.children;//或=knowledge_set_peers[0].children;knowledge_sets.children[0]
+            //.children是对象knowledge_sets的某一属性，该属性值是数组，数组元素是对象，函数是某一对象
+
+            update();//初始化
+            //next_click();
+            //end();
+            }
+        )
+    );
+
+    function next_click(){
+        result =parseFloat($('input[name="achieve"]:checked').val());//获取被选中的值
+        if (knowledge_set_peers.length>1 || knowledge_set_children.length>0){
+            if (result <= 0){//掌握程度为0，其子知识点不再询问,转向peers，该部分当没有peers可转算走到头
+                //更新待询问知识点、旁知识点集合和子知识点集合
+                peers();
+            }else{//只要result不为0，该部分只有当走到头，才会转向peers
+                //存结果
+                name = new String(knowledge_set.name);
+                String(result);
+                temp = name+":"+result;
+                results_array.push(temp);
+                //更新待询问知识点、旁知识点集合和子知识点集合
+                if (knowledge_set_children.length>0){//还没走到尽头
+                    children();
+                }else{//走到尽头了
+                    peers();
+                }
+            }
+        }else{//向下、向旁边都不行的时候，测试就结束了
+            end();
+        }
+    }
+
+    function peers(){
+        if(knowledge_set_peers.length>1){
+        //存在这种情况：peers没了，children还有，但是当前知识点的result为0，会跳到peers里面
+        //所以要在peers里面留个end函数
+            //更新待询问知识点、旁知识点集合和子知识点集合
+            knowledge_set_peers.shift();//除去已询问完毕的知识点（处在数组第一位置上），后面的元素自动前移
+            knowledge_set = knowledge_set_peers[0];
+            //更新子知识点集合
+            if(knowledge_set.children)//当有子节点 赋值，没有时赋空数组，这样保证不会使得knowledge_set_children成为undefined
+                knowledge_set_children = knowledge_set.children;
+            else
+                knowledge_set_children = new Array()
+
+            //更新HTML元素内容
+            update();
+        }else{
+            up();//既然是往旁边之路跳，但是又没有peers了，说明目前是向下向左都不可以，就要试一试往上跳
+            end();
+        }
+    }
+
+    function children(){
+        //更新待询问知识点、旁知识点集合和子知识点集合
+        knowledge_set_peers = knowledge_set_children;//且变为旁节点
+        knowledge_set = knowledge_set_peers[0];//更新待询问的知识点
+        //更新子知识点集合
+        if(knowledge_set.children)//当有子节点 赋值，没有时赋空数组，这样保证不会使得knowledge_set_children成为undefined
+            knowledge_set_children = knowledge_set.children;
+        else
+            knowledge_set_children = new Array()
+
+        //更新HTML元素内容
+        update();//自始至终都只询问第一个元素，因为询问完毕，将删除该元素，后面的元素们会前移
+    }
+
+    function end(){
+        next.remove();//删除"下一题"按钮 使用的函数来自jquery
+        submit.append("<button>提交测试结果</button>").add("class","send_results");//添加提交按钮
+        document.getElementById('results').value = results_array;//jQurey用起来没有原生态的JS好用啊，可能是我打开方式的不对吧 确实是打开方式不对
+    }
+
+    function update(){
+        document.getElementById("knowledge").innerHTML = knowledge_set["name"];
+        document.getElementById("demand").innerHTML = knowledge_set.demand;//name和demand两个属性
+    }
+</script>
+-->
+
+{% endblock %}

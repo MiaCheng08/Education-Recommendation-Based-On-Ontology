@@ -1,0 +1,40 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}个人信息{% endblock %}
+<!--这个页面叫做个人信息，主要是提供用户对信息编辑的功能，所以用form构建-->
+{% block content %}
+	<div class="panel panel-default panel-body">
+		<h3 style = "text-align:center">个人信息</h3>
+		<form class="form-base"  action="/profile/" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="m-row">
+				<label>用户名:{{ user.username }}</label>
+			</div>
+			<div class="m-row">
+				<label>邮箱:{{ user.email }}</label>
+			</div>
+			<div class="m-row">
+                <label for="id_headimage">头像</label>
+                <input type="file" accept="headimage/*" class="form-control" id="id_headimage" name="headimage">
+            </div>
+			<div class="m-row">
+				<label for="id_description">个人描述:</label>
+				<input type="text" class="form-control" placeholder="Description" id="id_description" maxlength="100" name="description" value="{{ user.userextraprofile.description }}">
+			</div>
+			<div class="m-row">
+				<label for="id_password">密码:</label>
+				<input type="password" class="form-control" placeholder="请输入密码" id="id_password" name="password" maxlength="128">
+                <!--这个name为什么是password1？-->
+			</div>
+			<div class="m-row" style="text-align: center">
+				<input type="submit" class="btn btn-success btn-lg" style="margin-top: 10px" value="确认修改">
+				<div class="m-row" style="text-align: center">
+					<a href = "/" class = "btn btn-default btn-lg" style="margin-top: 10px">返回主页</a>
+				</div>
+				<div style='color:red'>
+					{{context}}<!--这个东西什么情况下才能用到啊：用户进行信息修改系统反过来的消息 这一点可以用JS改善下-->
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+<!DOCTYPE html> <!--定义文档类型-->
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <!--charset=gb2312代表说明网站是采用的编码是简体中文；
+charset=utf-8代表世界通用的语言编码这个编码可以用到中文、韩文、日文等世界上所有语言编码上。-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!--viewport用于针对移动网页优化，“user-scalable=no”：用户不被允许手动缩放-->
+    <!--add by cby 2017.2.23-->
+    <meta name="description" content="a video-based elearning website">
+    <meta name="keywords" content="e-learning,video,ontology,math">
+    <!--end add -->
+    <title>Giligili - {% block title %}{% endblock %}</title><!-- 先把title放在这里，后面还能接着点东西 -->
+
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/css/base.css"/>
+    <!-- link css文件是有顺序的 -->
+	{% block extracss %}{% endblock %}<!-- 先把extracss放在这里，为后续模板要加载其他css文件留出位置 -->
+
+</head>
+
+<body>
+
+<!--这是一个导航栏，无论页面怎么变化，导航栏一直存在，所以将其在基本模板中设计着-->
+<nav class="navbar navbar-default"><!-- 导航栏的设计,使用了navbar和navbar-default两种类css样式-->
+
+	<div class="container"><!--在导航栏区域开辟不同于其他区域块-->
+		<!-- 移动设备上将导航栏整合为按钮 无法全部理解-->
+		<div class="navbar-header"><!-- 这里引用的css样式应该出自bootstrap中 -->
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+					data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+
+		<!-- 导航栏 --> <!-- div一般只使用类和id其中一个 -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+                {% if user.is_authenticated and user.is_staff %}<!-- 在上面的基础上针对管理员会额外显示一项 -->
+                <li><a href="/">今日统计</a></li>
+                <li><a href="/check">查看待审核视频</a></li>
+                <li><a href="/banvideo">查看已封禁视频</a></li>
+                    {% if user.is_superuser %}
+                    <li><a href="/admin">网站后台管理</a></li>
+                    {% else %}
+                    <li><a href="/upload">上传视频</a></li>
+                    {% endif %}
+                <li><a href = "/setpassword">修改密码</a></li>
+                <li><a href="/logout">登出</a></li>
+                {% else %}
+                <li class="menu"><a href="/">知识图谱</a></li>
+                <li class="menu"><a href="/allpath/">我的学习方案</a></li>
+                <li class="menu"><a href="/knowledge_test/">知识点测试</a></li>
+                    {% if user.is_authenticated %}<!-- 针对已注册用户额外显示一项点击后出现下拉
+                （应该是data-toggle="dropdown"该项属性实现的）菜单的“我的”
+                user从哪里来的？-->
+                    <li class="menu dropdown">
+                        <a href="#" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">我的
+                            <span class="caret"></span><!--这里用的span标签不知道是何作用-->
+                        </a>
+                        <!--“dropdown-toggle”是下拉菜单的触发
+                        href="#"：回到当前页面上方-->
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li><a href="/homepage/{{ user.id }}">个人主页</a></li>
+                            <li><a href="/home">个人信息修改</a></li>
+                            <li role="separator" class="divider"></li><!--做一个分隔线-->
+                            <li><a href="/upload">上传视频</a></li>
+                            <li><a href = "/setpassword">修改密码</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/logout">登出</a></li>
+                        </ul>
+                        <!--“dropdown-menu”是下拉菜单的显示-->
+                    </li>
+                    {% else %}<!--这是游客-->
+                    <li class="menu"><a href="/login">登录</a></li>
+                    <li class="menu"><a href="/register">注册</a></li>
+                    {% endif %}
+                {% endif %}
+			</ul>
+            <!--以上是利用ul无序标签包裹列表li标签，li标签包裹超链接标签a形成的导航栏-->
+			<form class="navbar-form navbar-right" role="search" action="/search/" method="get">
+                <!--这个表单的提交用的是GET-->
+                <!--role="search" ?：HTML5新添的：使用role属性告诉辅助设备，这个元素所扮演的角色，比如点击的按钮，
+                我们通常就使用role="button",会让这个元素可点击。但是它更多的是用来增强语义性-->
+				<!--服务器接受到的url怎么是这样的？<WSGIRequest: GET '/search/?title_include=4'>:
+				是因为使用的是GET而且还是在form中的原因吗？还是role这个属性，后者的可能性更大-->
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search" name="title_include">
+				</div>
+				<button type="submit" class="btn btn-default">
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>搜索
+				</button>
+			</form>
+            <!--在导航栏所在的大div中，该表单form是紧接着ul排列的，应该是css起到了作用-->
+		</div>
+	</div>
+
+</nav>
+
+<!-- 因为所有的界面都是在此基本上做的，所以先放一个大大的div，让后面的不同揭秘那自由发挥-->
+<div class="container">
+	{% block content %}{% endblock %}
+</div>
+
+{% block footer %}
+	<div class="footer">
+		<p>在线学习网站<br>
+        <a href="/about" target="_blank" style="color:black">关于我们</a></p>
+	</div>
+{% endblock %}
+
+
+<!-- script用来引用JS-->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/layer-2.x/layer.js"></script><!--web弹层组件-->
+
+{% block extrascripts %}{% endblock %}<!-- 与文件开头的extracss作用一样-->
+
+</body>
+</html>

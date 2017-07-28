@@ -1,0 +1,32 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}{{pageTitle}}{% endblock %}
+
+{% block extracss %}
+	<link rel="stylesheet" type= "text/css" href="/static/css/index.css" >
+    <link rel="stylesheet" href="/static/css/style.css">
+{% endblock %}
+
+{% block content %}<!--使用该模板标签在base.html规定的区域继承并添加元素-->
+    {% if length > 0 %}
+        {% for video in videos %}
+            <div class="col-md-3 col-sm-6 col-xs-12 dd-grid">
+                <figure class="effect-sadie">
+                    <img src="/media/{{video.cover}}" alt="img02" class="img-responsive center-block"/>
+                    <figcaption>
+                        <h2>{{ video.title }}</h2>
+                        <p>视频难度: {{ video.difficulty }}<br>讲师: {{ video.teacher }}<br>视频质量: {{ video.quality }}<br>播放量: {{ video.play }}</p>
+                        <a href="{{ video.get_absolute_url }}">View more</a>
+                    </figcaption>
+                    <!--figcaption用在figure中规定figure元素的标题-->
+                </figure>
+                <!--figure是HTML5中的新标签，用于规定独立的流内容，如图像、图表、照片、代码等 -->
+            </div>
+        {% endfor %}
+    {% else %}
+<div class="m-row" style="text-align: center">
+        <h3>抱歉，暂无资源，欢迎你来补充(づ￣ 3￣)づ</h3>
+        <h3>戳戳它的父知识点试试呗</h3>
+    </div>
+    {% endif %}
+{% endblock %}

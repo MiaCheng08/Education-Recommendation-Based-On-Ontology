@@ -1,0 +1,48 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}登录{% endblock %}
+
+{% block extracss %}
+	<style>
+	.top {
+        height:60px;
+	}
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div id="middle_content">
+        <div class="row bar_content">
+            <div class="col-sm-12 col-md-12 box-center top"></div>
+            <div class="col-sm-12 col-md-4 box-center"></div>
+            <div class="col-sm-12 col-md-4 box-center">
+		            <form class="form-base" onsubmit="return check(this)" action="/login/" method="post" enctype="multipart/form-data">
+            <!--form的提交还是login路径-->
+			{% csrf_token %}<!--用来确保传递数据过程安全-->
+			<div class="m-row">
+				<label for="id_username">用户名:</label>
+				<input type="text" placeholder="Username" maxlength="50" class="form-control" id = "id_username" name="username" value="{{ username }}">
+			</div>
+            <!--input标签中，name=value name是变量名，value是变量值，
+            value被赋值了是考虑到调用该模板的后两种情况-->
+            <!--label标签的 for 属性应当与相关元素的 id 属性相同,所以这里我对input标签添上id属性 2017.02.25-->
+            <!--placeholder属性是在无文字键入的状态下显示起到提示作用-->
+			<div class="m-row">
+				<label for="id_password">密码:</label>
+				<input type="password" placeholder="不少于6个字符" class="form-control" id = "id_password" name="password" maxlength="128">
+                <!--input标签没有value，应该是因为django不传输raw password-->
+            </div>
+			<div class="m-row" style="text-align: center">
+				<input type="submit" class="btn btn-success btn-lg" style="margin-top: 10px" value="登录">
+                <!--submit类型的input标签显示出来的是按钮-->
+			</div>
+			<div class="m-row" style="text-align: center">
+				<div class="m-row" style="color: red">
+					{{ error_msg }}
+				</div>
+			</div>
+		</form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

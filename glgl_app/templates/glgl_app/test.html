@@ -1,0 +1,216 @@
+{% extends "glgl_app/base.html" %}
+
+{% block title %}知识图谱{% endblock %}
+
+{% block extracss %}
+<link rel="stylesheet" href="/static/css/kn_other_map.min.css">
+<style>
+.vz-weighted_tree-viz {
+    overflow:scroll;
+}
+</style><!--这个是设置滚动条元素-->
+{% endblock %}
+
+{% block content %}
+<div class="mainCol padding15px addcolor">
+    <div class="setborder"><!--是setborder让它有了阴影-->
+        <div id="mapRow" class="kl_str"></div><!--在loadmap函数里面选定了id为mapRow的gaidiv进行扩展的-->
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script type="text/javascript" src="/static/js/force/d3.js"></script>
+<script type="text/javascript" src="/static/js/force/d3.geom.js"></script>
+<script type="text/javascript" src="/static/js/force/d3.layout.js"></script>
+<script type="text/javascript" src="/static/js/reloadMap.js"></script>
+<script type="text/javascript" src="/static/weight/lib/d3.min.js" charset="utf-8"></script>
+<script>
+    $(function () {
+        var dw=1140,dh=940,isAll=false,options;
+        options = {
+            width: dw,
+            height: dh
+        };
+        $.get('/showtree/',
+            function(data){
+            root = data;
+            root.fixed = true;
+            root.x = dw / 2;//中心点坐标
+            root.y = dh / 2 ;
+            loadMap(options,root);
+        })
+    });
+</script>
+{% endblock %}
+
+<!-- 保存以下格式 我现在用的删掉了几个样式类和div
+
+<script type="text/javascript" src="/static/js/load_force.js"></script>
+<script type="text/javascript" src="/static/weight/lib/d3.min.js" charset="utf-8"></script>
+<script>
+    $(function () {
+        var dw=1140,dh=940,isAll=false,options;
+        options = {
+            width: dw,
+            height: dh
+        };
+        $.get('/showtree/',
+            function(data){
+            var nodes = data.nodes,lines = data.lines
+            loadMap(options, nodes, lines);
+            //var nodestr = "[{&#34;course&#34;:&#34;0&#34;,&#34;fixed&#34;:true,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python&#34;,&#34;id&#34;:265023,&#34;index&#34;:0,&#34;prop&#34;:{&#34;course&#34;:&#34;0&#34;,&#34;name&#34;:&#34;Python&#34;,&#34;nTxt&#34;:&#34;1&#34;,&#34;subject&#34;:&#34;Python&#34;},&#34;x&#34;:560,&#34;y&#34;:480},{&#34;course&#34;:10746481,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746481&#34;,&#34;id&#34;:10746481,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746481,&#34;name&#34;:&#34;搭建开发环境&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746482,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746482&#34;,&#34;id&#34;:10746482,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746482,&#34;name&#34;:&#34;基本语法&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746483,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746483&#34;,&#34;id&#34;:10746483,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746483,&#34;name&#34;:&#34;高级特性&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746484,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746484&#34;,&#34;id&#34;:10746484,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746484,&#34;name&#34;:&#34;模块&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746485,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746485&#34;,&#34;id&#34;:10746485,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746485,&#34;name&#34;:&#34;错误、调试和测试&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746486,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746486&#34;,&#34;id&#34;:10746486,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746486,&#34;name&#34;:&#34;常用库和工具&#34;,&#34;nTxt&#34;:&#34;1&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746493,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746493&#34;,&#34;id&#34;:10746493,&#34;index&#34;:2,&#34;prop&#34;:{&#34;course&#34;:10746493,&#34;name&#34;:&#34;PIL&#34;,&#34;nTxt&#34;:&#34;1&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746512,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746512&#34;,&#34;id&#34;:10746512,&#34;index&#34;:3,&#34;prop&#34;:{&#34;course&#34;:10746512,&#34;name&#34;:&#34;Gnuplot&#34;,&#34;nTxt&#34;:&#34;1&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746487,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746487&#34;,&#34;id&#34;:10746487,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746487,&#34;name&#34;:&#34;DevOps&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746488,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746488&#34;,&#34;id&#34;:10746488,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746488,&#34;name&#34;:&#34;数据科学&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746489,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746489&#34;,&#34;id&#34;:10746489,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746489,&#34;name&#34;:&#34;Web开发&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746490,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746490&#34;,&#34;id&#34;:10746490,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746490,&#34;name&#34;:&#34;移动开发&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746491,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746491&#34;,&#34;id&#34;:10746491,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746491,&#34;name&#34;:&#34;函数式编程&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}},{&#34;course&#34;:10746526,&#34;href&#34;:&#34;http://lib.csdn.net/qq_36839087/structure/Python/node/10746526&#34;,&#34;id&#34;:10746526,&#34;index&#34;:1,&#34;prop&#34;:{&#34;course&#34;:10746526,&#34;name&#34;:&#34;代码片&#34;,&#34;nTxt&#34;:&#34;0&#34;,&#34;subject&#34;:&#34;&#34;}}]".replace(/&#34;/g, '"').replace(/\t/g,'').replace(/&amp;/g,'&');
+            //var linkstr = "[{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:1,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:2,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:3,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:4,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:5,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:6,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:6,&#34;target&#34;:7,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:7,&#34;target&#34;:8,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:9,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:10,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:11,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:12,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:13,&#34;type&#34;:&#34;REL&#34;},{&#34;desc&#34;:&#34;&#34;,&#34;source&#34;:0,&#34;target&#34;:14,&#34;type&#34;:&#34;REL&#34;}]".replace(/&#34;/g, '"').replace(/\t/g,'').replace(/&amp;/g,'&');
+            //loadMap(options, nodestr, linkstr);
+        })
+    });
+</script>
+
+<script type="text/javascript" src="/static/js/force/d3.js"></script>
+<script type="text/javascript" src="/static/js/force/d3.geom.js"></script>
+<script type="text/javascript" src="/static/js/force/d3.layout.js"></script>
+<script type="text/javascript" src="/static/js/reloadMap.js"></script>
+<script type="text/javascript" src="/static/weight/lib/d3.min.js" charset="utf-8"></script>
+<script>
+    $(function () {
+        var w = 1138,
+        h = 942,
+        circle,
+        node,
+        link,
+        root;//这些是全局变量
+
+        var force = d3.layout.force()
+        .on("tick", tick)//on:监听布局位置的变化。(仅支持"start","step","end"三种事件) tick让布局运行到下一步
+        .charge(function(d) { return d._children ? -d.size / 100*3.5 : -30*3.5; })//获取或设置节点的电荷数.(电荷数决定结点是互相排斥还是吸引)
+        .linkDistance(function(d) { return d.target._children ? 80*3 : 30*3; })//获取或设置节点间的连接强度.
+        .size([w, h - 160]);// 获取或设置布局的 宽 和 高 的大小.
+        //.alpha(.1);//获取或设置布局的冷却系数.(冷却系数为0时,节点间不再互相影响)
+
+        var map=d3.select("#mapRow").append("svg").attr({id:"map",width:w,height:h});
+        var vis=map.append("g");
+        map.append("svg:defs").append("svg:marker").attr("id","arrow").attr("viewBox","0 -5 10 10").attr("refX",6).attr("markerWidth",5).attr("markerHeight",5).attr("orient","auto").append("svg:path").attr("d","M0,-5L10,0L0,5").attr("fill","#6ac6ff"),
+
+        //$与jquery有关
+        $.get('/showtree/', function(json) {//读取JSON数据。并按照该数据进行绘图，即将这些数据可视化
+        root = json;
+        root.fixed = true;
+        root.x = w / 2;//中心点坐标
+        root.y = h / 2 ;
+        update();
+        });
+
+        function update() {
+        var nodes = flatten(root);//flatten以传入的参数root为根节点，进行迭代，将JSON数据解析，每项对应一个结点，并且为每一个节点赋予id
+        var links = d3.layout.tree().links(nodes);//根据解析出来的结点，调用函数布置线
+
+        // Restart the force layout.
+        force
+          .nodes(nodes)//获得或设置布局中的节点（node）阵列组
+          .links(links);//获得或设置布局中节点间的连接（Link）阵列组
+
+        // Update the links…  vis之前定义了
+        link = vis.selectAll("line.link")
+          .data(links, function(d) { return d.target.id; })
+          .enter().append("line").attr("class","link");//line是标签，link是类样式
+
+        //线上的字
+        var d=vis.selectAll("link.desc")
+          .data(links, function(d) { return d.id; })
+          .enter().append("text").attr("class","desc")
+          .text(function(d){return d.desc});//虽然class这些有关于样式的东西我动不了，但是它取数的东西我还是可以动的
+
+         //Exit any old links.
+        //link.exit().remove();//批量添加完所有line元素后，退出link（这个link是vis.selectAll("line.link")），并在退出之前清除多余的
+
+        var group=(//大圈小圈以及线，线上的文字的组合 是完整的节点
+            force.drag().on("dragstart",function(t){t.fixed=!0}),
+            vis.selectAll("g.node").data(nodes, function(d) { return d.id; })
+            );
+
+        var node=group.enter().append("g")
+           .attr("class",function(t,e){return 0===e?"node active":"node"})
+           .call(force.drag).on("click",function(d){d3.event.defaultPrevented||window.open(d.href)});//open设置点击圆圈的事件处理，这里非常重要！
+
+        circle = node.append("circle").attr("class", "outline")
+           .attr("r", function(d) { return d.children ? 12 : Math.sqrt(d.size)*8; })
+           .style("fill", color);
+        node.append("text").attr("class","nTxt")
+           .text(function(d){return d.nTxt})
+           .style({fill:"black"});
+        node.append("text").attr("class","propName")
+           .text(function(d){return d.name})
+           .style({fill:"black","font-family":"SimSun"});
+
+        force.start();
+        var g=setInterval(
+            function(){force.alpha()<.01?clearInterval(g):force.tick()},
+            80
+        );
+
+        }
+
+        function tick() {//上边是赋值，还没有拉回来
+        link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+        circle.attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+        }
+
+        // Color leaf nodes orange, and packages white or blue.
+        function color(d) {
+        if(d.depth){
+        var c=["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+        return c[d.depth];
+        }else{
+        return d._children ? "#3182bd" : d.children ? "#c6dbef" : "#fd8d3c";
+        }
+        }
+
+        // Toggle children on click.
+        function click(d) {
+        if (d.children) {
+        d._children = d.children;
+        d.children = null;
+        } else {
+        d.children = d._children;
+        d._children = null;
+        }
+        update();
+        }
+
+        //toggle href on click
+        function open(d) {
+            window.open("http://google.com");
+        }
+
+        // Returns a list of all nodes under the root.
+        function flatten(root) {
+        var nodes = [], i = 0;
+
+        function recurse(node) {//这里只是定义了函数，但是未被调用，在后面才被调用  reduce回调函数
+        if (node.children) for (x in node.children){recurse(node.children[x]);};//迭代，具体不深究了，总之沿一条路下去找到了叶子结点，突然发现这里的输入进来的数据格式真是我sparqltree的输入格式
+        //if (node.children) node.size = node.children.reduce(function(p, v) { return p + recurse(v); }, 0);
+        if (!node.id) node.id = ++i;
+        nodes.push(node);//把node挤进nodes中 类似于append
+        }
+
+        recurse(root);//调用前面定义的函数，存入参数root，root才之前被赋予了JSON数据
+        return nodes;
+        }
+    });
+</script>
+
+div class="mainCol clearfix padding15px addcolor">
+    div class="containerwrap setborder whitebk">
+        div class="kn_others"
+            div id="kl_screen1" class="kn_content"
+                <div id="mapRow1" class="kl_str"/div
+            /div
+        /div
+    /div
+/div
+-->
