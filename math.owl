@@ -1,0 +1,1592 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY math "http://www.semanticweb.org/chengboya/ontologies/math#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/chengboya/ontologies/2017/2/math#"
+     xml:base="http://www.semanticweb.org/chengboya/ontologies/2017/2/math"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:math="http://www.semanticweb.org/chengboya/ontologies/math#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/chengboya/ontologies/math">
+        <rdfs:comment>高等数学同济第七版，工科使用</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#beginningwith -->
+
+    <owl:ObjectProperty rdf:about="&math;beginningwith">
+        <rdfs:comment>用来指定从哪一子知识点开始学习，出来指定起始的以外，其他都按照ak和sk来</rdfs:comment>
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&math;math"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#resource -->
+
+    <owl:ObjectProperty rdf:about="&math;resource">
+        <rdf:type rdf:resource="&owl;InverseFunctionalProperty"/>
+        <rdfs:comment>知识点 对应 资源 math - videoid</rdfs:comment>
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&math;video"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#sk_is -->
+
+    <owl:ObjectProperty rdf:about="&math;sk_is">
+        <rdfs:comment>subsequent knowledge 后续知识</rdfs:comment>
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&math;math"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#demand_is -->
+
+    <owl:DatatypeProperty rdf:about="&math;demand_is">
+        <rdfs:comment>大纲要求为 20% 80% 100%</rdfs:comment>
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#description -->
+
+    <owl:DatatypeProperty rdf:about="&math;description">
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#difficulty_is -->
+
+    <owl:DatatypeProperty rdf:about="&math;difficulty_is">
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#equi -->
+
+    <owl:DatatypeProperty rdf:about="&math;equi">
+        <rdfs:comment>yes意味着他只是用来显示，关于它的资源要找它的equivalent</rdfs:comment>
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&xsd;string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#quality_is -->
+
+    <owl:DatatypeProperty rdf:about="&math;quality_is">
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#weight_is -->
+
+    <owl:DatatypeProperty rdf:about="&math;weight_is">
+        <rdfs:comment>可以制定一个规则，父节点下所有边权值之和为1</rdfs:comment>
+        <rdfs:comment>父节点到子节点的边权值</rdfs:comment>
+        <rdfs:domain rdf:resource="&math;math"/>
+        <rdfs:range rdf:resource="&xsd;float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#math -->
+
+    <owl:Class rdf:about="&math;math"/>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#video -->
+
+    <owl:Class rdf:about="&math;video"/>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#不定积分的概念与性质 -->
+
+    <owl:Class rdf:about="&math;不定积分的概念与性质">
+        <rdfs:subClassOf rdf:resource="&math;函数的不定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#元素法 -->
+
+    <owl:Class rdf:about="&math;元素法">
+        <rdfs:subClassOf rdf:resource="&math;定积分的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数 -->
+
+    <owl:Class rdf:about="&math;函数">
+        <rdfs:subClassOf rdf:resource="&math;math"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数图形的描绘 -->
+
+    <owl:Class rdf:about="&math;函数图形的描绘">
+        <owl:equivalentClass rdf:resource="&math;极值的应用：函数图形的描绘"/>
+        <rdfs:subClassOf rdf:resource="&math;导数的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数极限的定义以及性质 -->
+
+    <owl:Class rdf:about="&math;函数极限的定义以及性质">
+        <rdfs:subClassOf rdf:resource="&math;函数的极限"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的不定积分 -->
+
+    <owl:Class rdf:about="&math;函数的不定积分">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的基本介绍 -->
+
+    <owl:Class rdf:about="&math;函数的基本介绍">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的基本求导法则 -->
+
+    <owl:Class rdf:about="&math;函数的基本求导法则">
+        <owl:equivalentClass rdf:resource="&math;利用求导法则"/>
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的定积分 -->
+
+    <owl:Class rdf:about="&math;函数的定积分">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的导数 -->
+
+    <owl:Class rdf:about="&math;函数的导数">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的微分 -->
+
+    <owl:Class rdf:about="&math;函数的微分">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的极值 -->
+
+    <owl:Class rdf:about="&math;函数的极值">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的极限 -->
+
+    <owl:Class rdf:about="&math;函数的极限">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的连续性 -->
+
+    <owl:Class rdf:about="&math;函数的连续性">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的间断点 -->
+
+    <owl:Class rdf:about="&math;函数的间断点">
+        <rdfs:subClassOf rdf:resource="&math;函数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数连续性的基本概念 -->
+
+    <owl:Class rdf:about="&math;函数连续性的基本概念">
+        <rdfs:subClassOf rdf:resource="&math;函数的连续性"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#分部积分法 -->
+
+    <owl:Class rdf:about="&math;分部积分法">
+        <rdfs:subClassOf rdf:resource="&math;积分方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#初等函数的求导方法 -->
+
+    <owl:Class rdf:about="&math;初等函数的求导方法">
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#判别曲线的凹凸性和拐点 -->
+
+    <owl:Class rdf:about="&math;判别曲线的凹凸性和拐点">
+        <owl:equivalentClass rdf:resource="&math;导数的基本概念"/>
+        <rdfs:subClassOf rdf:resource="&math;导数的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#判断函数的单调性 -->
+
+    <owl:Class rdf:about="&math;判断函数的单调性">
+        <owl:equivalentClass rdf:resource="&math;导数的基本概念"/>
+        <rdfs:subClassOf rdf:resource="&math;导数的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用原函数求定积分 -->
+
+    <owl:Class rdf:about="&math;利用原函数求定积分">
+        <owl:equivalentClass rdf:resource="&math;牛顿-莱布尼茨公式"/>
+        <rdfs:subClassOf rdf:resource="&math;积分区间有界"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用基本初等函数的导数公式 -->
+
+    <owl:Class rdf:about="&math;利用基本初等函数的导数公式">
+        <owl:equivalentClass rdf:resource="&math;常数和基本初等函数的导数公式"/>
+        <rdfs:subClassOf rdf:resource="&math;初等函数的求导方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用定义求定积分 -->
+
+    <owl:Class rdf:about="&math;利用定义求定积分">
+        <owl:equivalentClass rdf:resource="&math;定积分的概念与性质"/>
+        <rdfs:subClassOf rdf:resource="&math;积分区间有界"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用导数定义 -->
+
+    <owl:Class rdf:about="&math;利用导数定义">
+        <owl:equivalentClass rdf:resource="&math;导数的基本概念"/>
+        <rdfs:subClassOf rdf:resource="&math;初等函数的求导方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用求导法则 -->
+
+    <owl:Class rdf:about="&math;利用求导法则">
+        <rdfs:subClassOf rdf:resource="&math;初等函数的求导方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#反常积分 -->
+
+    <owl:Class rdf:about="&math;反常积分">
+        <rdfs:subClassOf rdf:resource="&math;计算定积分的方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#在几何上的应用 -->
+
+    <owl:Class rdf:about="&math;在几何上的应用">
+        <rdfs:subClassOf rdf:resource="&math;定积分的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#基本初等函数的微分公式与微分运算法则 -->
+
+    <owl:Class rdf:about="&math;基本初等函数的微分公式与微分运算法则">
+        <rdfs:subClassOf rdf:resource="&math;函数的微分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的分部积分法 -->
+
+    <owl:Class rdf:about="&math;定积分的分部积分法">
+        <rdfs:subClassOf rdf:resource="&math;积分区间有界"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的应用 -->
+
+    <owl:Class rdf:about="&math;定积分的应用">
+        <rdfs:subClassOf rdf:resource="&math;函数的定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的换元法 -->
+
+    <owl:Class rdf:about="&math;定积分的换元法">
+        <rdfs:subClassOf rdf:resource="&math;积分区间有界"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的概念与性质 -->
+
+    <owl:Class rdf:about="&math;定积分的概念与性质">
+        <rdfs:subClassOf rdf:resource="&math;函数的定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的近似计算 -->
+
+    <owl:Class rdf:about="&math;定积分的近似计算">
+        <rdfs:subClassOf rdf:resource="&math;函数的定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#对数求导法 -->
+
+    <owl:Class rdf:about="&math;对数求导法">
+        <rdfs:subClassOf rdf:resource="&math;初等函数的求导方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#导数的基本概念 -->
+
+    <owl:Class rdf:about="&math;导数的基本概念">
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#导数的应用 -->
+
+    <owl:Class rdf:about="&math;导数的应用">
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#常数和基本初等函数的导数公式 -->
+
+    <owl:Class rdf:about="&math;常数和基本初等函数的导数公式">
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#微分的三个中值定理 -->
+
+    <owl:Class rdf:about="&math;微分的三个中值定理">
+        <rdfs:subClassOf rdf:resource="&math;函数的微分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#微分的基本概念 -->
+
+    <owl:Class rdf:about="&math;微分的基本概念">
+        <rdfs:subClassOf rdf:resource="&math;函数的微分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#拉格朗日中值定理 -->
+
+    <owl:Class rdf:about="&math;拉格朗日中值定理">
+        <rdfs:subClassOf rdf:resource="&math;微分的三个中值定理"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#换元积分法 -->
+
+    <owl:Class rdf:about="&math;换元积分法">
+        <rdfs:subClassOf rdf:resource="&math;积分方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#数列极限 -->
+
+    <owl:Class rdf:about="&math;数列极限">
+        <rdfs:subClassOf rdf:resource="&math;math"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#无穷小与无穷大 -->
+
+    <owl:Class rdf:about="&math;无穷小与无穷大">
+        <rdfs:subClassOf rdf:resource="&math;函数的极限"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#无穷小与无穷大的基本概念以及证明方法 -->
+
+    <owl:Class rdf:about="&math;无穷小与无穷大的基本概念以及证明方法">
+        <rdfs:subClassOf rdf:resource="&math;无穷小与无穷大"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#无穷小的比较 -->
+
+    <owl:Class rdf:about="&math;无穷小的比较">
+        <rdfs:subClassOf rdf:resource="&math;无穷小与无穷大"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#映射 -->
+
+    <owl:Class rdf:about="&math;映射">
+        <rdfs:subClassOf rdf:resource="&math;math"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#有理函数的积分 -->
+
+    <owl:Class rdf:about="&math;有理函数的积分">
+        <rdfs:subClassOf rdf:resource="&math;函数的不定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极值与最值 -->
+
+    <owl:Class rdf:about="&math;极值与最值">
+        <owl:equivalentClass rdf:resource="&math;求函数的最值和极值"/>
+        <rdfs:subClassOf rdf:resource="&math;函数的极值"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极值基本概念 -->
+
+    <owl:Class rdf:about="&math;极值基本概念">
+        <rdfs:subClassOf rdf:resource="&math;函数的极值"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极值的应用：函数图形的描绘 -->
+
+    <owl:Class rdf:about="&math;极值的应用：函数图形的描绘">
+        <rdfs:subClassOf rdf:resource="&math;函数的极值"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极限存在准则和两个重要极限 -->
+
+    <owl:Class rdf:about="&math;极限存在准则和两个重要极限">
+        <rdfs:subClassOf rdf:resource="&math;函数的极限"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极限运算法则 -->
+
+    <owl:Class rdf:about="&math;极限运算法则">
+        <rdfs:subClassOf rdf:resource="&math;函数的极限"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#柯西中值定理 -->
+
+    <owl:Class rdf:about="&math;柯西中值定理">
+        <rdfs:subClassOf rdf:resource="&math;微分的三个中值定理"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求体积 -->
+
+    <owl:Class rdf:about="&math;求体积">
+        <rdfs:subClassOf rdf:resource="&math;在几何上的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求函数的最值和极值 -->
+
+    <owl:Class rdf:about="&math;求函数的最值和极值">
+        <rdfs:subClassOf rdf:resource="&math;导数的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求平面图形的面积 -->
+
+    <owl:Class rdf:about="&math;求平面图形的面积">
+        <rdfs:subClassOf rdf:resource="&math;在几何上的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求平面曲线的弧长 -->
+
+    <owl:Class rdf:about="&math;求平面曲线的弧长">
+        <rdfs:subClassOf rdf:resource="&math;在几何上的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#泰勒公式 -->
+
+    <owl:Class rdf:about="&math;泰勒公式">
+        <owl:equivalentClass rdf:resource="&math;近似表达复杂函数"/>
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#洛必达法则 -->
+
+    <owl:Class rdf:about="&math;洛必达法则">
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#牛顿-莱布尼茨公式 -->
+
+    <owl:Class rdf:about="&math;牛顿-莱布尼茨公式">
+        <rdfs:subClassOf rdf:resource="&math;函数的定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分上限的函数 -->
+
+    <owl:Class rdf:about="&math;积分上限的函数">
+        <rdfs:subClassOf rdf:resource="&math;函数的定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分区间有界 -->
+
+    <owl:Class rdf:about="&math;积分区间有界">
+        <rdfs:subClassOf rdf:resource="&math;计算定积分的方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分方法 -->
+
+    <owl:Class rdf:about="&math;积分方法">
+        <rdfs:subClassOf rdf:resource="&math;函数的不定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分表 -->
+
+    <owl:Class rdf:about="&math;积分表">
+        <rdfs:subClassOf rdf:resource="&math;函数的不定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#罗尔定理 -->
+
+    <owl:Class rdf:about="&math;罗尔定理">
+        <rdfs:subClassOf rdf:resource="&math;微分的三个中值定理"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#计算定积分的方法 -->
+
+    <owl:Class rdf:about="&math;计算定积分的方法">
+        <rdfs:subClassOf rdf:resource="&math;函数的定积分"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#近似表达复杂函数 -->
+
+    <owl:Class rdf:about="&math;近似表达复杂函数">
+        <rdfs:subClassOf rdf:resource="&math;导数的应用"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#连续函数的和差积商运算 -->
+
+    <owl:Class rdf:about="&math;连续函数的和差积商运算">
+        <rdfs:subClassOf rdf:resource="&math;函数的连续性"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#闭区间上连续函数的性质 -->
+
+    <owl:Class rdf:about="&math;闭区间上连续函数的性质">
+        <rdfs:subClassOf rdf:resource="&math;函数的连续性"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#隐函数求导 -->
+
+    <owl:Class rdf:about="&math;隐函数求导">
+        <rdfs:subClassOf rdf:resource="&math;初等函数的求导方法"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#高阶导数 -->
+
+    <owl:Class rdf:about="&math;高阶导数">
+        <rdfs:subClassOf rdf:resource="&math;函数的导数"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#math -->
+
+    <owl:NamedIndividual rdf:about="&math;math">
+        <rdf:type rdf:resource="&math;math"/>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>高等数学上册同济第七版</math:description>
+        <math:beginningwith rdf:resource="&math;映射"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#不定积分的概念与性质 -->
+
+    <owl:NamedIndividual rdf:about="&math;不定积分的概念与性质">
+        <rdf:type rdf:resource="&math;不定积分的概念与性质"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+        <math:sk_is rdf:resource="&math;积分表"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#元素法 -->
+
+    <owl:NamedIndividual rdf:about="&math;元素法">
+        <rdf:type rdf:resource="&math;元素法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.45</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>元素法的基本思想,元素法的应用</math:description>
+        <math:sk_is rdf:resource="&math;在几何上的应用"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数">
+        <rdf:type rdf:resource="&math;函数"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.9</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;函数的基本介绍"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数图形的描绘 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数图形的描绘">
+        <rdf:type rdf:resource="&math;函数图形的描绘"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数极限的定义以及性质 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数极限的定义以及性质">
+        <rdf:type rdf:resource="&math;函数极限的定义以及性质"/>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.2</math:demand_is>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:description>自变量趋于无穷大时的极限,自变量趋于有限值时的极限,单侧极限,函数极限性质,证明极限存在的方法</math:description>
+        <math:sk_is rdf:resource="&math;无穷小与无穷大"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的不定积分 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的不定积分">
+        <rdf:type rdf:resource="&math;函数的不定积分"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.15</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;不定积分的概念与性质"/>
+        <math:sk_is rdf:resource="&math;函数的定积分"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的基本介绍 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的基本介绍">
+        <rdf:type rdf:resource="&math;函数的基本介绍"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.05</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+        <math:description>函数的概念,函数的几种特性,函数的运算</math:description>
+        <math:sk_is rdf:resource="&math;数列极限"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的基本求导法则 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的基本求导法则">
+        <rdf:type rdf:resource="&math;函数的基本求导法则"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.15</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;常数和基本初等函数的导数公式"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的定积分 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的定积分">
+        <rdf:type rdf:resource="&math;函数的定积分"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.15</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;定积分的概念与性质"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的导数 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的导数">
+        <rdf:type rdf:resource="&math;函数的导数"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.175</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;导数的基本概念"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的微分 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的微分">
+        <rdf:type rdf:resource="&math;函数的微分"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.175</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;微分的基本概念"/>
+        <math:sk_is rdf:resource="&math;洛必达法则"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的极值 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的极值">
+        <rdf:type rdf:resource="&math;函数的极值"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.05</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;函数的不定积分"/>
+        <math:beginningwith rdf:resource="&math;极值基本概念"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的极限 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的极限">
+        <rdf:type rdf:resource="&math;函数的极限"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.15</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;函数极限的定义以及性质"/>
+        <math:sk_is rdf:resource="&math;函数的连续性"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的连续性 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的连续性">
+        <rdf:type rdf:resource="&math;函数的连续性"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.05</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+        <math:sk_is rdf:resource="&math;函数的间断点"/>
+        <math:beginningwith rdf:resource="&math;函数连续性的基本概念"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数的间断点 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数的间断点">
+        <rdf:type rdf:resource="&math;函数的间断点"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.05</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+        <math:description>函数间断点的基本概念,判断不同类型的间断点</math:description>
+        <math:sk_is rdf:resource="&math;连续函数的和差积商运算"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#函数连续性的基本概念 -->
+
+    <owl:NamedIndividual rdf:about="&math;函数连续性的基本概念">
+        <rdf:type rdf:resource="&math;函数连续性的基本概念"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.3</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#分部积分法 -->
+
+    <owl:NamedIndividual rdf:about="&math;分部积分法">
+        <rdf:type rdf:resource="&math;分部积分法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.5</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#初等函数的求导方法 -->
+
+    <owl:NamedIndividual rdf:about="&math;初等函数的求导方法">
+        <rdf:type rdf:resource="&math;初等函数的求导方法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;隐函数求导"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#判别曲线的凹凸性和拐点 -->
+
+    <owl:NamedIndividual rdf:about="&math;判别曲线的凹凸性和拐点">
+        <rdf:type rdf:resource="&math;判别曲线的凹凸性和拐点"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#判断函数的单调性 -->
+
+    <owl:NamedIndividual rdf:about="&math;判断函数的单调性">
+        <rdf:type rdf:resource="&math;判断函数的单调性"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用原函数求定积分 -->
+
+    <owl:NamedIndividual rdf:about="&math;利用原函数求定积分">
+        <rdf:type rdf:resource="&math;利用原函数求定积分"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用基本初等函数的导数公式 -->
+
+    <owl:NamedIndividual rdf:about="&math;利用基本初等函数的导数公式">
+        <rdf:type rdf:resource="&math;利用基本初等函数的导数公式"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用定义求定积分 -->
+
+    <owl:NamedIndividual rdf:about="&math;利用定义求定积分">
+        <rdf:type rdf:resource="&math;利用定义求定积分"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用导数定义 -->
+
+    <owl:NamedIndividual rdf:about="&math;利用导数定义">
+        <rdf:type rdf:resource="&math;利用导数定义"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#利用求导法则 -->
+
+    <owl:NamedIndividual rdf:about="&math;利用求导法则">
+        <rdf:type rdf:resource="&math;利用求导法则"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#反常积分 -->
+
+    <owl:NamedIndividual rdf:about="&math;反常积分">
+        <rdf:type rdf:resource="&math;反常积分"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.3</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+        <math:description>无界函数的反常积分,无穷限的反常积分</math:description>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#在几何上的应用 -->
+
+    <owl:NamedIndividual rdf:about="&math;在几何上的应用">
+        <rdf:type rdf:resource="&math;在几何上的应用"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.55</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;求平面图形的面积"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#基本初等函数的微分公式与微分运算法则 -->
+
+    <owl:NamedIndividual rdf:about="&math;基本初等函数的微分公式与微分运算法则">
+        <rdf:type rdf:resource="&math;基本初等函数的微分公式与微分运算法则"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.35</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;微分的三个中值定理"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的分部积分法 -->
+
+    <owl:NamedIndividual rdf:about="&math;定积分的分部积分法">
+        <rdf:type rdf:resource="&math;定积分的分部积分法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;定积分的换元法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的应用 -->
+
+    <owl:NamedIndividual rdf:about="&math;定积分的应用">
+        <rdf:type rdf:resource="&math;定积分的应用"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;元素法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的换元法 -->
+
+    <owl:NamedIndividual rdf:about="&math;定积分的换元法">
+        <rdf:type rdf:resource="&math;定积分的换元法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的概念与性质 -->
+
+    <owl:NamedIndividual rdf:about="&math;定积分的概念与性质">
+        <rdf:type rdf:resource="&math;定积分的概念与性质"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.1</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>定积分问题举例,定积分的概念,定义,利用定义求定积分,</math:description>
+        <math:sk_is rdf:resource="&math;定积分的近似计算"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#定积分的近似计算 -->
+
+    <owl:NamedIndividual rdf:about="&math;定积分的近似计算">
+        <rdf:type rdf:resource="&math;定积分的近似计算"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.05</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.2</math:demand_is>
+        <math:sk_is rdf:resource="&math;积分上限的函数"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#对数求导法 -->
+
+    <owl:NamedIndividual rdf:about="&math;对数求导法">
+        <rdf:type rdf:resource="&math;对数求导法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;函数的微分"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#导数的基本概念 -->
+
+    <owl:NamedIndividual rdf:about="&math;导数的基本概念">
+        <rdf:type rdf:resource="&math;导数的基本概念"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.07</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>导数定义,导数的几何意义,函数的可导性与连续性的关系,利用定义求导</math:description>
+        <math:sk_is rdf:resource="&math;函数的基本求导法则"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#导数的应用 -->
+
+    <owl:NamedIndividual rdf:about="&math;导数的应用">
+        <rdf:type rdf:resource="&math;导数的应用"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#常数和基本初等函数的导数公式 -->
+
+    <owl:NamedIndividual rdf:about="&math;常数和基本初等函数的导数公式">
+        <rdf:type rdf:resource="&math;常数和基本初等函数的导数公式"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.15</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;高阶导数"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#微分的三个中值定理 -->
+
+    <owl:NamedIndividual rdf:about="&math;微分的三个中值定理">
+        <rdf:type rdf:resource="&math;微分的三个中值定理"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.35</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;拉格朗日中值定理"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#微分的基本概念 -->
+
+    <owl:NamedIndividual rdf:about="&math;微分的基本概念">
+        <rdf:type rdf:resource="&math;微分的基本概念"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.3</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>微分的几何意义,微分的定义,微分在近似计算中的应用</math:description>
+        <math:sk_is rdf:resource="&math;基本初等函数的微分公式与微分运算法则"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#拉格朗日中值定理 -->
+
+    <owl:NamedIndividual rdf:about="&math;拉格朗日中值定理">
+        <rdf:type rdf:resource="&math;拉格朗日中值定理"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.4</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;柯西中值定理"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#换元积分法 -->
+
+    <owl:NamedIndividual rdf:about="&math;换元积分法">
+        <rdf:type rdf:resource="&math;换元积分法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.5</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;分部积分法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#数列极限 -->
+
+    <owl:NamedIndividual rdf:about="&math;数列极限">
+        <rdf:type rdf:resource="&math;数列极限"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.05</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>定义，证明方法，收敛数列的性质</math:description>
+        <math:sk_is rdf:resource="&math;函数的极限"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#无穷小与无穷大 -->
+
+    <owl:NamedIndividual rdf:about="&math;无穷小与无穷大">
+        <rdf:type rdf:resource="&math;无穷小与无穷大"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;无穷小与无穷大的基本概念以及证明方法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#无穷小与无穷大的基本概念以及证明方法 -->
+
+    <owl:NamedIndividual rdf:about="&math;无穷小与无穷大的基本概念以及证明方法">
+        <rdf:type rdf:resource="&math;无穷小与无穷大的基本概念以及证明方法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.5</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;极限运算法则"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#无穷小的比较 -->
+
+    <owl:NamedIndividual rdf:about="&math;无穷小的比较">
+        <rdf:type rdf:resource="&math;无穷小的比较"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.5</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>不同类型的无穷小,等价无穷小在求极限中的应用</math:description>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#映射 -->
+
+    <owl:NamedIndividual rdf:about="&math;映射">
+        <rdf:type rdf:resource="&math;映射"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.05</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>概念，逆映射与复合映射</math:description>
+        <math:sk_is rdf:resource="&math;函数"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#有理函数的积分 -->
+
+    <owl:NamedIndividual rdf:about="&math;有理函数的积分">
+        <rdf:type rdf:resource="&math;有理函数的积分"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>有理函数求积分法,其他函数转为有理函数</math:description>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极值与最值 -->
+
+    <owl:NamedIndividual rdf:about="&math;极值与最值">
+        <rdf:type rdf:resource="&math;极值与最值"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.4</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;极值的应用：函数图形的描绘"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极值基本概念 -->
+
+    <owl:NamedIndividual rdf:about="&math;极值基本概念">
+        <rdf:type rdf:resource="&math;极值基本概念"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>函数极值的定义,极值的求法,极值点与拐点之间的关系</math:description>
+        <math:sk_is rdf:resource="&math;极值与最值"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极值的应用：函数图形的描绘 -->
+
+    <owl:NamedIndividual rdf:about="&math;极值的应用：函数图形的描绘">
+        <rdf:type rdf:resource="&math;极值的应用：函数图形的描绘"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.35</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极限存在准则和两个重要极限 -->
+
+    <owl:NamedIndividual rdf:about="&math;极限存在准则和两个重要极限">
+        <rdf:type rdf:resource="&math;极限存在准则和两个重要极限"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>夹逼准则和对应的第一极限,单调有界数列必有极限和对应的第二极限</math:description>
+        <math:sk_is rdf:resource="&math;无穷小的比较"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#极限运算法则 -->
+
+    <owl:NamedIndividual rdf:about="&math;极限运算法则">
+        <rdf:type rdf:resource="&math;极限运算法则"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>求极限的方式之一</math:description>
+        <math:sk_is rdf:resource="&math;极限存在准则和两个重要极限"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#柯西中值定理 -->
+
+    <owl:NamedIndividual rdf:about="&math;柯西中值定理">
+        <rdf:type rdf:resource="&math;柯西中值定理"/>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.2</math:demand_is>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:sk_is rdf:resource="&math;罗尔定理"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求体积 -->
+
+    <owl:NamedIndividual rdf:about="&math;求体积">
+        <rdf:type rdf:resource="&math;求体积"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.35</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;求平面曲线的弧长"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求函数的最值 -->
+
+    <owl:NamedIndividual rdf:about="&math;求函数的最值">
+        <math:weight_is rdf:datatype="&xsd;decimal">0.15</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求函数的最值和极值 -->
+
+    <owl:NamedIndividual rdf:about="&math;求函数的最值和极值">
+        <rdf:type rdf:resource="&math;求函数的最值和极值"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求函数的极值 -->
+
+    <owl:NamedIndividual rdf:about="&math;求函数的极值">
+        <math:weight_is rdf:datatype="&xsd;decimal">0.15</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求平面图形的面积 -->
+
+    <owl:NamedIndividual rdf:about="&math;求平面图形的面积">
+        <rdf:type rdf:resource="&math;求平面图形的面积"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.35</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;求体积"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#求平面曲线的弧长 -->
+
+    <owl:NamedIndividual rdf:about="&math;求平面曲线的弧长">
+        <rdf:type rdf:resource="&math;求平面曲线的弧长"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.3</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#泰勒公式 -->
+
+    <owl:NamedIndividual rdf:about="&math;泰勒公式">
+        <rdf:type rdf:resource="&math;泰勒公式"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.1</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;函数的极值"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#洛必达法则 -->
+
+    <owl:NamedIndividual rdf:about="&math;洛必达法则">
+        <rdf:type rdf:resource="&math;洛必达法则"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.1</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;泰勒公式"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#牛顿-莱布尼茨公式 -->
+
+    <owl:NamedIndividual rdf:about="&math;牛顿-莱布尼茨公式">
+        <rdf:type rdf:resource="&math;牛顿-莱布尼茨公式"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;计算定积分的方法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分上限的函数 -->
+
+    <owl:NamedIndividual rdf:about="&math;积分上限的函数">
+        <rdf:type rdf:resource="&math;积分上限的函数"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.1</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+        <math:description>积分上限函数的概念,求导定理</math:description>
+        <math:sk_is rdf:resource="&math;牛顿-莱布尼茨公式"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分区间有界 -->
+
+    <owl:NamedIndividual rdf:about="&math;积分区间有界">
+        <rdf:type rdf:resource="&math;积分区间有界"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.7</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;反常积分"/>
+        <math:beginningwith rdf:resource="&math;定积分的分部积分法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分方法 -->
+
+    <owl:NamedIndividual rdf:about="&math;积分方法">
+        <rdf:type rdf:resource="&math;积分方法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.3</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:beginningwith rdf:resource="&math;换元积分法"/>
+        <math:sk_is rdf:resource="&math;有理函数的积分"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#积分表 -->
+
+    <owl:NamedIndividual rdf:about="&math;积分表">
+        <rdf:type rdf:resource="&math;积分表"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:description>基本积分表,常用积分表的使用</math:description>
+        <math:sk_is rdf:resource="&math;积分方法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#罗尔定理 -->
+
+    <owl:NamedIndividual rdf:about="&math;罗尔定理">
+        <rdf:type rdf:resource="&math;罗尔定理"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.4</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#计算定积分的方法 -->
+
+    <owl:NamedIndividual rdf:about="&math;计算定积分的方法">
+        <rdf:type rdf:resource="&math;计算定积分的方法"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.25</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;定积分的应用"/>
+        <math:beginningwith rdf:resource="&math;积分区间有界"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#近似表达复杂函数 -->
+
+    <owl:NamedIndividual rdf:about="&math;近似表达复杂函数">
+        <rdf:type rdf:resource="&math;近似表达复杂函数"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:equi>yes</math:equi>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#连续函数的和差积商运算 -->
+
+    <owl:NamedIndividual rdf:about="&math;连续函数的和差积商运算">
+        <rdf:type rdf:resource="&math;连续函数的和差积商运算"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.5</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.6</math:demand_is>
+        <math:sk_is rdf:resource="&math;闭区间上连续函数的性质"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#闭区间上连续函数的性质 -->
+
+    <owl:NamedIndividual rdf:about="&math;闭区间上连续函数的性质">
+        <rdf:type rdf:resource="&math;闭区间上连续函数的性质"/>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.2</math:demand_is>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:description>介值定理，有界性，最大值最小值定理，零点定理</math:description>
+        <math:sk_is rdf:resource="&math;函数的导数"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#隐函数求导 -->
+
+    <owl:NamedIndividual rdf:about="&math;隐函数求导">
+        <rdf:type rdf:resource="&math;隐函数求导"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.2</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">1.0</math:demand_is>
+        <math:sk_is rdf:resource="&math;对数求导法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/chengboya/ontologies/math#高阶导数 -->
+
+    <owl:NamedIndividual rdf:about="&math;高阶导数">
+        <rdf:type rdf:resource="&math;高阶导数"/>
+        <math:weight_is rdf:datatype="&xsd;decimal">0.03</math:weight_is>
+        <math:demand_is rdf:datatype="&xsd;decimal">0.2</math:demand_is>
+        <math:sk_is rdf:resource="&math;初等函数的求导方法"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotations
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="&owl;Thing">
+        <rdfs:comment>thing代表高等数学上册</rdfs:comment>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+
